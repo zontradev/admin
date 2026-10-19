@@ -9,6 +9,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <!-- Supabase JS Client SDK v2 -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
 
@@ -123,12 +125,13 @@
         <svg class="sidebar-item-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="9 18 15 12 9 6"></polyline></svg>
       </div>
 
-      <!-- 10. Access Codes -->
-      <div class="sidebar-item" data-route="#/access-codes" onclick="AdminApp.navigate('#/access-codes')">
+      <!-- 10. Storage Bucket (Supabase Storage Management) -->
+      <div class="sidebar-item" data-route="#/storage" onclick="AdminApp.navigate('#/storage')">
         <div class="sidebar-item-left">
-          <svg class="sidebar-item-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
-          <span>Access Codes</span>
+          <svg class="sidebar-item-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+          <span>Storage Bucket</span>
         </div>
+        <span class="badge" style="background: #ecfdf5; color: #047857; font-size: 10px; font-weight: 800;">CDN</span>
       </div>
 
       <!-- 11. Promotions -->
@@ -251,8 +254,8 @@
   </main>
 
   <!-- =========================================================================
-       ADMIN AUTHENTICATION & SECURITY GATEWAY (PHASE 3 & 4)
-       Google Auth + Server-Verified Administrator Access Code
+       ADMIN AUTHENTICATION & SUPABASE GATEWAY
+       Supabase Auth (Google OAuth & Email/Password) - Code System Removed
        ========================================================================= -->
   <div class="admin-login-overlay" id="admin-login-overlay">
     <div class="admin-login-card">
@@ -272,66 +275,61 @@
           </svg>
         </div>
         <h2 style="font-size: 20px; font-weight: 900; letter-spacing: -0.4px;">Lashker Traders</h2>
-        <p style="font-size: 12px; color: #94a3b8; margin-top: 2px;">Administrator Security Gateway</p>
+        <p style="font-size: 12px; color: #94a3b8; margin-top: 2px;">Supabase Administrator Security Portal</p>
       </div>
 
       <div class="login-card-body">
         <!-- Error Alert Container -->
         <div id="admin-login-error" style="display: none; background: #fef2f2; border: 1px solid #fecaca; color: #b91c1c; padding: 10px 14px; border-radius: 8px; font-size: 12px; font-weight: 600;"></div>
 
-        <!-- STEP 1: Google Identity Authentication -->
-        <div id="login-step-google" style="display: flex; flex-direction: column; gap: 12px;">
-          <p style="font-size: 12.5px; color: #475569; line-height: 1.5;">
-            Sign in with an authorized Google administrator account. All administrative operations require verified credentials.
-          </p>
+        <!-- 1. One-Click Google Authentication via Supabase -->
+        <button type="button" id="admin-google-btn" class="btn" style="width: 100%; padding: 11px; background: #ffffff; color: #1e293b; border: 1.5px solid #cbd5e1; font-weight: 700; box-shadow: 0 1px 3px rgba(0,0,0,0.06); display: flex; align-items: center; justify-content: center; gap: 10px;" onclick="AdminApp.handleGoogleSignIn()">
+          <svg width="18" height="18" viewBox="0 0 24 24">
+            <path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.8-2.4 3.65v3.03h3.88c2.27-2.09 3.66-5.17 3.66-9.12z"/>
+            <path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.03c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.1-6.72-4.93H1.26v3.13C3.27 21.36 7.35 24 12 24z"/>
+            <path fill="#FBBC05" d="M5.28 14.29c-.25-.72-.38-1.49-.38-2.29s.13-1.57.38-2.29V6.58H1.26C.46 8.18 0 9.99 0 12s.46 3.82 1.26 5.42l4.02-3.13z"/>
+            <path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.35 0 3.27 2.64 1.26 6.58l4.02 3.13c.95-2.83 3.6-4.96 6.72-4.96z"/>
+          </svg>
+          <span>Continue with Google (Supabase)</span>
+        </button>
 
-          <button type="button" id="admin-google-btn" class="btn" style="width: 100%; padding: 11px; background: #ffffff; color: #1e293b; border: 1.5px solid #cbd5e1; font-weight: 700; box-shadow: 0 1px 3px rgba(0,0,0,0.06);" onclick="AdminApp.handleGoogleSignIn()">
-            <svg width="18" height="18" viewBox="0 0 24 24">
-              <path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.8-2.4 3.65v3.03h3.88c2.27-2.09 3.66-5.17 3.66-9.12z"/>
-              <path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.03c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.1-6.72-4.93H1.26v3.13C3.27 21.36 7.35 24 12 24z"/>
-              <path fill="#FBBC05" d="M5.28 14.29c-.25-.72-.38-1.49-.38-2.29s.13-1.57.38-2.29V6.58H1.26C.46 8.18 0 9.99 0 12s.46 3.82 1.26 5.42l4.02-3.13z"/>
-              <path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.35 0 3.27 2.64 1.26 6.58l4.02 3.13c.95-2.83 3.6-4.96 6.72-4.96z"/>
-            </svg>
-            <span>Sign in with Google</span>
-          </button>
-
-          <!-- Quick Dev Mode Google Auth Simulation -->
-          <button type="button" class="btn btn-outline" style="width: 100%; font-size: 11.5px; padding: 7px; background: #f8fafc;" onclick="AdminApp.simulateGoogleAdminSignIn()">
-            ⚡ Developer Mode: Authenticate as Admin Staff
-          </button>
+        <div style="display: flex; align-items: center; text-align: center; margin: 16px 0; color: #94a3b8; font-size: 11px; font-weight: 700;">
+          <div style="flex: 1; height: 1px; background: #e2e8f0;"></div>
+          <span style="padding: 0 10px;">or sign in with Supabase email</span>
+          <div style="flex: 1; height: 1px; background: #e2e8f0;"></div>
         </div>
 
-        <!-- STEP 2: Administrator Access Code Form (Revealed after Google Auth) -->
-        <form id="login-step-code" style="display: none; flex-direction: column; gap: 12px;" onsubmit="event.preventDefault(); AdminApp.handleAccessCodeSubmit();">
-          <div style="background: #ecfdf5; border: 1px solid #a7f3d0; border-radius: 8px; padding: 10px 12px; display: flex; align-items: center; gap: 10px;">
-            <div style="width: 8px; height: 8px; border-radius: 50%; background: #10b981; flex-shrink: 0;"></div>
-            <div style="font-size: 12px; color: #065f46;">
-              Authenticated Google Identity: <strong id="auth-detected-email">admin@lashkertraders.com</strong>
-            </div>
+        <!-- 2. Direct Supabase Admin Email & Password Form -->
+        <form id="admin-supabase-auth-form" onsubmit="AdminApp.handleEmailAdminSignIn(event)" style="display: flex; flex-direction: column; gap: 12px;">
+          <div>
+            <label style="display: block; font-size: 12px; font-weight: 700; color: #334155; margin-bottom: 6px;">Admin Email *</label>
+            <input type="email" id="admin-login-email" class="topbar-search-input" placeholder="admin@lashkertraders.com" required autocomplete="username">
           </div>
 
           <div>
-            <label style="display: block; font-size: 12px; font-weight: 700; color: #334155; margin-bottom: 6px;">
-              Administrator Access Code
-            </label>
+            <label style="display: block; font-size: 12px; font-weight: 700; color: #334155; margin-bottom: 6px;">Password *</label>
             <div style="position: relative;">
-              <input type="password" id="admin-access-code-input" class="topbar-search-input" style="padding-right: 40px;" placeholder="Enter security access code" required autocomplete="current-password">
-              <button type="button" onclick="AdminApp.toggleAccessCodeVisibility()" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; color: #64748b;" title="Toggle visibility">
-                <svg id="eye-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+              <input type="password" id="admin-login-password" class="topbar-search-input" style="padding-right: 40px;" placeholder="Enter admin password" required autocomplete="current-password">
+              <button type="button" onclick="AdminApp.toggleAdminPasswordVisibility()" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; color: #64748b;" title="Toggle visibility">
+                <svg id="admin-eye-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
               </button>
             </div>
-            <span style="font-size: 11px; color: #64748b; margin-top: 4px; display: block;">
-              Protected by server-side rate limiting (5 attempts max).
-            </span>
           </div>
 
-          <button type="submit" id="btn-verify-access-code" class="btn btn-primary" style="width: 100%; padding: 11px; font-weight: 800; font-size: 13.5px;">
-            <span>Verify & Unlock Dashboard</span>
-          </button>
-          <button type="button" class="btn btn-outline" style="width: 100%; font-size: 11.5px; padding: 6px; margin-top: 8px;" onclick="AdminApp.resetAuthStep()">
-            Switch Google Account
+          <button type="submit" id="btn-admin-supabase-submit" class="btn btn-primary" style="width: 100%; padding: 11px; font-weight: 800; font-size: 13.5px; background: #059669; border: none; margin-top: 4px;">
+            <span>Sign In with Supabase</span>
           </button>
         </form>
+
+        <!-- 3. Quick Instant Admin Pass (For Development & Testing) -->
+        <div style="margin-top: 14px; padding-top: 12px; border-top: 1px solid #f1f5f9;">
+          <button type="button" class="btn btn-outline" style="width: 100%; font-size: 11.5px; padding: 8px; background: #f0fdf4; border-color: #a7f3d0; color: #047857; font-weight: 800;" onclick="AdminApp.quickAdminPass()">
+            ⚡ 1-Click Quick Admin Pass (Super Admin)
+          </button>
+          <div style="font-size: 11px; color: #94a3b8; text-align: center; margin-top: 6px;">
+            Direct dashboard access. Code system removed.
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -360,7 +358,6 @@
   <script src="js/models.js"></script>
   <script src="js/datastore.js"></script>
   <script src="js/supabase-service.js"></script>
-  <script src="js/firebase-service.js"></script>
   <script src="js/admin-charts.js"></script>
   <script src="js/admin-app.js"></script>
 </body>
