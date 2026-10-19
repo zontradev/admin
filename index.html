@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Lashker Traders - Admin Dashboard & Management Portal</title>
+  <title>Lashker Traders — Admin Dashboard & Operations Portal</title>
   <link rel="stylesheet" href="css/admin.css">
   <!-- Google Fonts Inter -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -13,24 +13,34 @@
 <body>
 
   <!-- =========================================================================
-       ADMIN SIDEBAR (Matches Reference Dashboard UI)
+       ADMIN SIDEBAR (Exact Match to Prototype UI)
        ========================================================================= -->
   <aside class="admin-sidebar" id="admin-sidebar">
+    <!-- Brand Header -->
     <div class="sidebar-header">
-      <div class="sidebar-logo-icon">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
-          <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/>
-          <path d="M16 10a4 4 0 0 1-8 0"/>
+      <div class="sidebar-logo-icon" title="Lashker Traders">
+        <svg width="26" height="26" viewBox="0 0 100 100">
+          <circle cx="50" cy="52" r="38" fill="#fed7aa"/>
+          <path d="M22 48 C22 22 78 22 78 48" stroke="#059669" stroke-width="6" fill="none" stroke-linecap="round"/>
+          <circle cx="50" cy="18" r="7" fill="#10b981"/>
+          <circle cx="39" cy="48" r="4.5" fill="#0f172a"/>
+          <circle cx="61" cy="48" r="4.5" fill="#0f172a"/>
+          <circle cx="37.5" cy="46" r="1.5" fill="#ffffff"/>
+          <circle cx="59.5" cy="46" r="1.5" fill="#ffffff"/>
+          <circle cx="31" cy="56" r="5" fill="#f43f5e" opacity="0.45"/>
+          <circle cx="69" cy="56" r="5" fill="#f43f5e" opacity="0.45"/>
+          <path d="M42 60 Q50 69 58 60" stroke="#059669" stroke-width="3.5" fill="none" stroke-linecap="round"/>
         </svg>
       </div>
       <div>
         <div class="sidebar-brand-name">Lashker Traders</div>
-        <div class="sidebar-brand-sub">Wholesale & Retail</div>
+        <div class="sidebar-brand-sub">Diapers • Baby Care • More</div>
       </div>
     </div>
 
+    <!-- Navigation Items -->
     <nav class="sidebar-nav">
-      <!-- Main Dashboard -->
+      <!-- 1. Dashboard -->
       <div class="sidebar-item active" data-route="#/dashboard" onclick="AdminApp.navigate('#/dashboard')">
         <div class="sidebar-item-left">
           <svg class="sidebar-item-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
@@ -38,62 +48,90 @@
         </div>
       </div>
 
-      <div class="nav-group-title">Catalog & Inventory</div>
-
-      <!-- Products Menu -->
+      <!-- 2. Products -->
       <div class="sidebar-item" data-route="#/products" onclick="AdminApp.navigate('#/products')">
         <div class="sidebar-item-left">
           <svg class="sidebar-item-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
           <span>Products</span>
         </div>
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
-      </div>
-      <div class="sidebar-submenu">
-        <div class="submenu-item" data-route="#/products" onclick="AdminApp.navigate('#/products')">All Products</div>
-        <div class="submenu-item" data-route="#/products/add" onclick="AdminApp.navigate('#/products/add')">Add Product</div>
-        <div class="submenu-item" data-route="#/categories" onclick="AdminApp.navigate('#/categories')">Categories</div>
-        <div class="submenu-item" data-route="#/brands" onclick="AdminApp.navigate('#/brands')">Brands</div>
-        <div class="submenu-item" data-route="#/inventory" onclick="AdminApp.navigate('#/inventory')">Inventory</div>
+        <svg class="sidebar-item-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="9 18 15 12 9 6"></polyline></svg>
       </div>
 
-      <!-- Orders Menu -->
+      <!-- 3. Categories -->
+      <div class="sidebar-item" data-route="#/categories" onclick="AdminApp.navigate('#/categories')">
+        <div class="sidebar-item-left">
+          <svg class="sidebar-item-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h7"></path></svg>
+          <span>Categories</span>
+        </div>
+        <svg class="sidebar-item-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+      </div>
+
+      <!-- 4. Brands -->
+      <div class="sidebar-item" data-route="#/brands" onclick="AdminApp.navigate('#/brands')">
+        <div class="sidebar-item-left">
+          <svg class="sidebar-item-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="10"></circle><path d="M8 14s1.5 2 4 2 4-2 4-2"></path><line x1="9" y1="9" x2="9.01" y2="9"></line><line x1="15" y1="9" x2="15.01" y2="9"></line></svg>
+          <span>Brands</span>
+        </div>
+        <svg class="sidebar-item-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+      </div>
+
+      <!-- 5. Inventory -->
+      <div class="sidebar-item" data-route="#/inventory" onclick="AdminApp.navigate('#/inventory')">
+        <div class="sidebar-item-left">
+          <svg class="sidebar-item-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><rect x="1" y="3" width="15" height="13"></rect><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon><circle cx="5.5" cy="18.5" r="2.5"></circle><circle cx="18.5" cy="18.5" r="2.5"></circle></svg>
+          <span>Inventory</span>
+        </div>
+        <svg class="sidebar-item-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+      </div>
+
+      <!-- 6. Orders -->
       <div class="sidebar-item" data-route="#/orders" onclick="AdminApp.navigate('#/orders')">
         <div class="sidebar-item-left">
           <svg class="sidebar-item-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
           <span>Orders</span>
         </div>
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <span class="sidebar-badge" id="sidebar-order-badge">12</span>
+          <svg class="sidebar-item-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+        </div>
       </div>
 
-      <div class="nav-group-title">People & Wholesale</div>
-
-      <!-- Customers -->
+      <!-- 7. Customers -->
       <div class="sidebar-item" data-route="#/customers" onclick="AdminApp.navigate('#/customers')">
         <div class="sidebar-item-left">
           <svg class="sidebar-item-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
           <span>Customers</span>
         </div>
+        <svg class="sidebar-item-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="9 18 15 12 9 6"></polyline></svg>
       </div>
 
-      <!-- B2B Wholesale Applications -->
+      <!-- 8. B2B Applications -->
       <div class="sidebar-item" data-route="#/b2b" onclick="AdminApp.navigate('#/b2b')">
         <div class="sidebar-item-left">
           <svg class="sidebar-item-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>
           <span>B2B Applications</span>
         </div>
+        <span class="sidebar-badge" id="sidebar-b2b-badge">5</span>
       </div>
 
-      <!-- Business Partners -->
-      <div class="sidebar-item" data-route="#/partners" onclick="AdminApp.navigate('#/b2b')">
+      <!-- 9. Wholesale Pricing -->
+      <div class="sidebar-item" data-route="#/wholesale-pricing" onclick="AdminApp.navigate('#/wholesale-pricing')">
         <div class="sidebar-item-left">
-          <svg class="sidebar-item-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-          <span>Business Partners</span>
+          <svg class="sidebar-item-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+          <span>Wholesale Pricing</span>
+        </div>
+        <svg class="sidebar-item-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+      </div>
+
+      <!-- 10. Access Codes -->
+      <div class="sidebar-item" data-route="#/access-codes" onclick="AdminApp.navigate('#/access-codes')">
+        <div class="sidebar-item-left">
+          <svg class="sidebar-item-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+          <span>Access Codes</span>
         </div>
       </div>
 
-      <div class="nav-group-title">Marketing & Settings</div>
-
-      <!-- Promotions -->
+      <!-- 11. Promotions -->
       <div class="sidebar-item" data-route="#/promotions" onclick="AdminApp.navigate('#/promotions')">
         <div class="sidebar-item-left">
           <svg class="sidebar-item-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line></svg>
@@ -101,7 +139,40 @@
         </div>
       </div>
 
-      <!-- Settings -->
+      <!-- 12. Delivery & Shipping -->
+      <div class="sidebar-item" data-route="#/delivery" onclick="AdminApp.navigate('#/delivery')">
+        <div class="sidebar-item-left">
+          <svg class="sidebar-item-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><rect x="1" y="3" width="15" height="13"></rect><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon><circle cx="5.5" cy="18.5" r="2.5"></circle><circle cx="18.5" cy="18.5" r="2.5"></circle></svg>
+          <span>Delivery & Shipping</span>
+        </div>
+        <svg class="sidebar-item-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+      </div>
+
+      <!-- 13. Reviews -->
+      <div class="sidebar-item" data-route="#/reviews" onclick="AdminApp.navigate('#/reviews')">
+        <div class="sidebar-item-left">
+          <svg class="sidebar-item-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+          <span>Reviews</span>
+        </div>
+      </div>
+
+      <!-- 14. Reports -->
+      <div class="sidebar-item" data-route="#/reports" onclick="AdminApp.navigate('#/reports')">
+        <div class="sidebar-item-left">
+          <svg class="sidebar-item-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+          <span>Reports</span>
+        </div>
+      </div>
+
+      <!-- 15. Audit Logs -->
+      <div class="sidebar-item" data-route="#/audit-logs" onclick="AdminApp.navigate('#/audit-logs')">
+        <div class="sidebar-item-left">
+          <svg class="sidebar-item-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+          <span>Audit Logs</span>
+        </div>
+      </div>
+
+      <!-- 16. Settings -->
       <div class="sidebar-item" data-route="#/settings" onclick="AdminApp.navigate('#/settings')">
         <div class="sidebar-item-left">
           <svg class="sidebar-item-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
@@ -110,14 +181,23 @@
       </div>
     </nav>
 
+    <!-- Sidebar Bottom: Admin Staff Pill & Logout -->
     <div class="sidebar-footer">
-      <div class="system-status-box">
-        <div class="system-status-indicator">
-          <span class="status-dot"></span>
-          <span>System Online</span>
+      <div class="sidebar-user-card" onclick="AdminApp.navigate('#/settings')">
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <div class="sidebar-avatar" id="sidebar-admin-avatar">SA</div>
+          <div>
+            <div class="sidebar-user-name" id="sidebar-admin-name">Admin Staff</div>
+            <div class="sidebar-user-role" id="sidebar-admin-role">Super Admin</div>
+          </div>
         </div>
-        <span class="system-version">v1.0.0</span>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#64748b" stroke-width="2.2"><polyline points="9 18 15 12 9 6"></polyline></svg>
       </div>
+
+      <button type="button" class="sidebar-logout-btn" onclick="AdminApp.handleAdminLogout()" title="Logout Admin Session">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+        <span>Logout</span>
+      </button>
     </div>
   </aside>
 
@@ -126,42 +206,42 @@
        ========================================================================= -->
   <main class="admin-main">
     <header class="admin-topbar">
-      <!-- Search Bar -->
-      <div class="topbar-search-wrap">
-        <svg class="topbar-search-icon" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-        <input type="text" id="admin-search-input" class="topbar-search-input" placeholder="Search products, orders, customers..." oninput="AdminApp.handleGlobalSearch(this.value)">
+      <div class="topbar-left">
+        <!-- Hamburger Menu Button -->
+        <button type="button" class="hamburger-btn" onclick="document.getElementById('admin-sidebar').classList.toggle('open')" title="Toggle Menu">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+        </button>
+
+        <!-- Search Bar -->
+        <div class="topbar-search-wrap">
+          <svg class="topbar-search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+          <input type="text" id="admin-search-input" class="topbar-search-input" placeholder="Search products, orders, customers..." oninput="AdminApp.handleGlobalSearch(this.value)">
+        </div>
       </div>
 
-      <!-- Right Topbar Actions -->
+      <!-- Right Actions: Notifications, Language, Profile Pill -->
       <div class="topbar-actions">
-        <!-- Live Cloud Status Indicator -->
-        <div class="cloud-status-pill" id="admin-cloud-indicator" style="display: flex; align-items: center; gap: 7px; font-size: 11.5px; font-weight: 700; background: #ecfdf5; color: #047857; padding: 5px 12px; border-radius: 20px; border: 1px solid #a7f3d0;">
-          <span style="width: 8px; height: 8px; border-radius: 50%; background: #10b981; display: inline-block; box-shadow: 0 0 6px #10b981;"></span>
-          <span id="admin-cloud-status-text">Cloud Sync: Online</span>
+
+        <!-- Notification Bell with Red Badge 3 -->
+        <div class="topbar-icon-btn" onclick="AdminApp.navigate('#/orders')" title="Orders requiring attention">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
+          <span class="topbar-badge" id="topbar-notif-badge">3</span>
         </div>
 
-        <!-- Link to customer site -->
-        <a href="../index.html" target="_blank" class="customer-site-link">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
-          <span>Customer Storefront</span>
-        </a>
-
-        <!-- Notifications -->
-        <div class="topbar-btn" title="Live Customer Orders" onclick="AdminApp.navigate('#/orders')">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
-          <span class="topbar-btn-badge" id="admin-notif-badge">0</span>
+        <!-- Language Selector -->
+        <div class="lang-picker" title="Change Language">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
+          <span>English</span>
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="6 9 12 15 18 9"></polyline></svg>
         </div>
 
         <!-- Admin Profile Pill -->
-        <div class="admin-user-pill" style="display: flex; align-items: center; gap: 10px;">
-          <div class="admin-avatar" id="admin-topbar-avatar">AD</div>
-          <div>
-            <div class="admin-user-name" id="admin-topbar-name">Super Admin</div>
-            <div class="admin-user-role" id="admin-topbar-role">admin@lashkertraders.com</div>
+        <div class="topbar-user-pill" onclick="AdminApp.navigate('#/settings')">
+          <div class="topbar-avatar" id="topbar-admin-avatar">SA</div>
+          <div class="topbar-user-info">
+            <div class="topbar-user-name" id="topbar-admin-name">Admin Staff</div>
+            <div class="topbar-user-role" id="topbar-admin-role">Super Admin</div>
           </div>
-          <button class="btn btn-outline btn-sm" onclick="AdminApp.handleAdminLogout()" title="Logout Admin Session" style="margin-left: 6px; padding: 4px 8px; font-size: 11px; border-color: #cbd5e1; color: #dc2626;">
-            Logout
-          </button>
         </div>
       </div>
     </header>
@@ -171,78 +251,104 @@
   </main>
 
   <!-- =========================================================================
-       ADMIN AUTHENTICATION GATEWAY MODAL (Firebase Auth + Master Admin)
+       ADMIN AUTHENTICATION & SECURITY GATEWAY (PHASE 3 & 4)
+       Google Auth + Server-Verified Administrator Access Code
        ========================================================================= -->
-  <!-- =========================================================================
-       ADMIN AUTHENTICATION GATEWAY MODAL (Google Authentication ONLY)
-       ========================================================================= -->
-  <div class="admin-login-overlay hidden" id="admin-login-overlay">
-    <div class="admin-login-card" style="max-width: 440px; border-radius: 16px; padding: 32px; box-shadow: 0 20px 40px -15px rgba(0,0,0,0.25);">
-      <div style="text-align: center; margin-bottom: 24px;">
-        <div style="display: inline-flex; align-items: center; gap: 10px; margin-bottom: 12px;">
-          <div class="logo-badge" style="width: 48px; height: 48px; font-size: 24px; border-radius: 12px; background: linear-gradient(135deg, #f59e0b, #d97706); color: #fff; font-weight: 900; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(217,119,6,0.3);">LT</div>
-          <span class="brand-title" style="color: #0f172a; font-size: 24px; font-weight: 900; letter-spacing: -0.5px;">Lashker Traders</span>
-        </div>
-        <h2 style="font-size: 20px; font-weight: 900; color: #0f172a; margin-bottom: 6px;">Super Admin Portal</h2>
-        <div style="display: inline-flex; align-items: center; gap: 6px; background: #eff6ff; color: #1d4ed8; padding: 4px 12px; border-radius: 20px; font-size: 11.5px; font-weight: 800; border: 1px solid #bfdbfe; margin-bottom: 10px;">
-          <span style="width: 7px; height: 7px; border-radius: 50%; background: #2563eb;"></span>
-          Google Sign-In Only
-        </div>
-        <p style="font-size: 13px; color: #64748b; line-height: 1.5; margin: 0;">
-          Authenticate with your Google Account to manage live catalog, push products/categories/brands to Cloud Firestore, and upload to Supabase public storage.
-        </p>
-      </div>
-
-      <!-- Security / Auto-Admin Role Badge -->
-      <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 12px 14px; margin-bottom: 20px; font-size: 12px; color: #334155; display: flex; align-items: flex-start; gap: 10px;">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="2.2" style="flex-shrink: 0; margin-top: 1px;"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-        <div>
-          <strong style="color: #0f172a;">Auto Admin Profile:</strong> Signing in via Google automatically registers/syncs your profile in Firestore with <code style="background:#e0e7ff; color:#3730a3; padding:1px 5px; border-radius:4px;">role = "ADMIN"</code> and write permissions.
-        </div>
-      </div>
-
-      <!-- Google Sign In Button -->
-      <div style="display: flex; flex-direction: column; gap: 12px;">
-        <button type="button" id="admin-google-login-btn" onclick="AdminApp.handleAdminGoogleLogin()" style="width: 100%; display: flex; align-items: center; justify-content: center; gap: 12px; font-weight: 700; padding: 13px 16px; font-size: 14.5px; border-radius: 10px; border: 1.5px solid #cbd5e1; background: #ffffff; color: #1e293b; box-shadow: 0 2px 6px rgba(0,0,0,0.06); cursor: pointer; transition: all 0.2s;">
-          <svg width="20" height="20" viewBox="0 0 24 24">
-            <path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.8-2.4 3.65v3.03h3.88c2.27-2.09 3.66-5.17 3.66-9.12z"/>
-            <path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.03c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.1-6.72-4.93H1.26v3.13C3.27 21.36 7.35 24 12 24z"/>
-            <path fill="#FBBC05" d="M5.28 14.29c-.25-.72-.38-1.49-.38-2.29s.13-1.57.38-2.29V6.58H1.26C.46 8.18 0 9.99 0 12s.46 3.82 1.26 5.42l4.02-3.13z"/>
-            <path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.35 0 3.27 2.64 1.26 6.58l4.02 3.13c.95-2.83 3.6-4.96 6.72-4.96z"/>
+  <div class="admin-login-overlay" id="admin-login-overlay">
+    <div class="admin-login-card">
+      <div class="login-card-header">
+        <div style="display: inline-flex; align-items: center; justify-content: center; width: 56px; height: 56px; border-radius: 50%; background: #ffffff; margin-bottom: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);">
+          <svg width="34" height="34" viewBox="0 0 100 100">
+            <circle cx="50" cy="52" r="38" fill="#fed7aa"/>
+            <path d="M22 48 C22 22 78 22 78 48" stroke="#059669" stroke-width="6" fill="none" stroke-linecap="round"/>
+            <circle cx="50" cy="18" r="7" fill="#10b981"/>
+            <circle cx="39" cy="48" r="4.5" fill="#0f172a"/>
+            <circle cx="61" cy="48" r="4.5" fill="#0f172a"/>
+            <circle cx="37.5" cy="46" r="1.5" fill="#ffffff"/>
+            <circle cx="59.5" cy="46" r="1.5" fill="#ffffff"/>
+            <circle cx="31" cy="56" r="5" fill="#f43f5e" opacity="0.45"/>
+            <circle cx="69" cy="56" r="5" fill="#f43f5e" opacity="0.45"/>
+            <path d="M42 60 Q50 69 58 60" stroke="#059669" stroke-width="3.5" fill="none" stroke-linecap="round"/>
           </svg>
-          <span>Sign In with Google (Super Admin)</span>
-        </button>
-
-        <!-- Offline / Dev Testing Google Simulation -->
-        <button type="button" class="btn btn-outline btn-sm" onclick="AdminApp.quickMasterGoogleLogin()" style="width: 100%; font-weight: 700; color: #475569; border-color: #cbd5e1; background: #f8fafc; padding: 9px; font-size: 12px;">
-          ⚡ Test Mode: Simulate Google Admin Auth
-        </button>
+        </div>
+        <h2 style="font-size: 20px; font-weight: 900; letter-spacing: -0.4px;">Lashker Traders</h2>
+        <p style="font-size: 12px; color: #94a3b8; margin-top: 2px;">Administrator Security Gateway</p>
       </div>
 
-      <div style="margin-top: 20px; text-align: center; border-top: 1px solid #f1f5f9; padding-top: 14px;">
-        <a href="../index.html" style="font-size: 12.5px; font-weight: 700; color: #64748b; text-decoration: none; display: inline-flex; align-items: center; gap: 6px;">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
-          Return to Customer Storefront
-        </a>
+      <div class="login-card-body">
+        <!-- Error Alert Container -->
+        <div id="admin-login-error" style="display: none; background: #fef2f2; border: 1px solid #fecaca; color: #b91c1c; padding: 10px 14px; border-radius: 8px; font-size: 12px; font-weight: 600;"></div>
+
+        <!-- STEP 1: Google Identity Authentication -->
+        <div id="login-step-google" style="display: flex; flex-direction: column; gap: 12px;">
+          <p style="font-size: 12.5px; color: #475569; line-height: 1.5;">
+            Sign in with an authorized Google administrator account. All administrative operations require verified credentials.
+          </p>
+
+          <button type="button" id="admin-google-btn" class="btn" style="width: 100%; padding: 11px; background: #ffffff; color: #1e293b; border: 1.5px solid #cbd5e1; font-weight: 700; box-shadow: 0 1px 3px rgba(0,0,0,0.06);" onclick="AdminApp.handleGoogleSignIn()">
+            <svg width="18" height="18" viewBox="0 0 24 24">
+              <path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.8-2.4 3.65v3.03h3.88c2.27-2.09 3.66-5.17 3.66-9.12z"/>
+              <path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.03c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.1-6.72-4.93H1.26v3.13C3.27 21.36 7.35 24 12 24z"/>
+              <path fill="#FBBC05" d="M5.28 14.29c-.25-.72-.38-1.49-.38-2.29s.13-1.57.38-2.29V6.58H1.26C.46 8.18 0 9.99 0 12s.46 3.82 1.26 5.42l4.02-3.13z"/>
+              <path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.35 0 3.27 2.64 1.26 6.58l4.02 3.13c.95-2.83 3.6-4.96 6.72-4.96z"/>
+            </svg>
+            <span>Sign in with Google</span>
+          </button>
+
+          <!-- Quick Dev Mode Google Auth Simulation -->
+          <button type="button" class="btn btn-outline" style="width: 100%; font-size: 11.5px; padding: 7px; background: #f8fafc;" onclick="AdminApp.simulateGoogleAdminSignIn()">
+            ⚡ Developer Mode: Authenticate as Admin Staff
+          </button>
+        </div>
+
+        <!-- STEP 2: Administrator Access Code Form (Revealed after Google Auth) -->
+        <form id="login-step-code" style="display: none; flex-direction: column; gap: 12px;" onsubmit="event.preventDefault(); AdminApp.handleAccessCodeSubmit();">
+          <div style="background: #ecfdf5; border: 1px solid #a7f3d0; border-radius: 8px; padding: 10px 12px; display: flex; align-items: center; gap: 10px;">
+            <div style="width: 8px; height: 8px; border-radius: 50%; background: #10b981; flex-shrink: 0;"></div>
+            <div style="font-size: 12px; color: #065f46;">
+              Authenticated Google Identity: <strong id="auth-detected-email">admin@lashkertraders.com</strong>
+            </div>
+          </div>
+
+          <div>
+            <label style="display: block; font-size: 12px; font-weight: 700; color: #334155; margin-bottom: 6px;">
+              Administrator Access Code
+            </label>
+            <div style="position: relative;">
+              <input type="password" id="admin-access-code-input" class="topbar-search-input" style="padding-right: 40px;" placeholder="Enter security access code" required autocomplete="current-password">
+              <button type="button" onclick="AdminApp.toggleAccessCodeVisibility()" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; color: #64748b;" title="Toggle visibility">
+                <svg id="eye-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+              </button>
+            </div>
+            <span style="font-size: 11px; color: #64748b; margin-top: 4px; display: block;">
+              Protected by server-side rate limiting (5 attempts max).
+            </span>
+          </div>
+
+          <button type="submit" id="btn-verify-access-code" class="btn btn-primary" style="width: 100%; padding: 11px; font-weight: 800; font-size: 13.5px;">
+            <span>Verify & Unlock Dashboard</span>
+          </button>
+          <button type="button" class="btn btn-outline" style="width: 100%; font-size: 11.5px; padding: 6px; margin-top: 8px;" onclick="AdminApp.resetAuthStep()">
+            Switch Google Account
+          </button>
+        </form>
       </div>
     </div>
   </div>
 
-  <!-- =========================================================================
-       CUSTOM MODAL & ALERT DIALOGS (Zero Native Browser Dialogs)
-       ========================================================================= -->
+  <!-- Custom Alert / Confirm Dialog Modal -->
   <div class="modal-backdrop" id="admin-dialog-backdrop">
     <div class="modal-box">
       <div class="modal-header">
         <h3 class="modal-title" id="admin-dialog-title">Notification</h3>
-        <button type="button" class="btn-icon" onclick="document.getElementById('admin-dialog-backdrop').classList.remove('active')">
+        <button type="button" class="hamburger-btn" onclick="document.getElementById('admin-dialog-backdrop').classList.remove('active')">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
         </button>
       </div>
       <div class="modal-body" id="admin-dialog-body"></div>
       <div class="modal-footer">
         <button type="button" class="btn btn-outline" id="admin-dialog-cancel">Cancel</button>
-        <button type="button" class="btn btn-gold" id="admin-dialog-confirm">Confirm</button>
+        <button type="button" class="btn btn-primary" id="admin-dialog-confirm">Confirm</button>
       </div>
     </div>
   </div>
@@ -250,11 +356,11 @@
   <!-- Toast Container -->
   <div class="toast-container" id="admin-toast-container"></div>
 
-  <!-- Shared Services and Logic -->
-  <script src="../js/models.js"></script>
-  <script src="../js/datastore.js"></script>
-  <script src="../js/supabase-service.js"></script>
-  <script src="../js/firebase-service.js"></script>
+  <!-- Self-Contained Admin Services and Logic -->
+  <script src="js/models.js"></script>
+  <script src="js/datastore.js"></script>
+  <script src="js/supabase-service.js"></script>
+  <script src="js/firebase-service.js"></script>
   <script src="js/admin-charts.js"></script>
   <script src="js/admin-app.js"></script>
 </body>

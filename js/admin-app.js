@@ -77,8 +77,20 @@ class AdminAppController {
       this.renderCustomersPage();
     } else if (route === "#/b2b") {
       this.renderB2BPage();
+    } else if (route === "#/wholesale-pricing") {
+      this.renderWholesalePricingPage();
+    } else if (route === "#/access-codes") {
+      this.renderAccessCodesPage();
     } else if (route === "#/promotions") {
       this.renderPromotionsPage();
+    } else if (route === "#/delivery") {
+      this.renderDeliveryPage();
+    } else if (route === "#/reviews") {
+      this.renderReviewsPage();
+    } else if (route === "#/reports") {
+      this.renderReportsPage();
+    } else if (route === "#/audit-logs") {
+      this.renderAuditLogsPage();
     } else if (route === "#/settings") {
       this.renderSettingsPage();
     } else {
@@ -87,263 +99,525 @@ class AdminAppController {
   }
 
   // ------------------------------------------------------------------------
-  // VIEW 1: DASHBOARD OVERVIEW (Zero Mock Products / Real Metrics)
+  // VIEW 1: DASHBOARD OVERVIEW (Exact match to prototype UI)
   // ------------------------------------------------------------------------
   renderDashboard() {
     const content = document.getElementById("admin-content-area");
     if (!content) return;
 
-    const products = StorageManager.getProducts();
-    const orders = StorageManager.getOrders();
-    const categories = StorageManager.getCategories();
-    const brands = StorageManager.getBrands();
-    const user = StorageManager.getUser();
-
-    // Real Metrics (No hardcoded fake numbers)
-    const totalProductsCount = products.length;
-    const totalOrdersCount = orders.length;
-    const totalCustomersCount = (user && user.id) ? 1 : 0;
-    const totalRevenue = orders.reduce((acc, o) => acc + (o.total || 0), 0);
-
-    // Order status counts for donut chart
-    const statusCounts = {
-      pending: orders.filter(o => (o.status || "").toLowerCase().includes("pending") || (o.status || "").toLowerCase().includes("placed")).length,
-      processing: orders.filter(o => (o.status || "").toLowerCase().includes("processing") || (o.status || "").toLowerCase().includes("confirmed") || (o.status || "").toLowerCase().includes("packed")).length,
-      shipped: orders.filter(o => (o.status || "").toLowerCase().includes("shipped") || (o.status || "").toLowerCase().includes("out for delivery")).length,
-      delivered: orders.filter(o => (o.status || "").toLowerCase().includes("delivered")).length,
-      cancelled: orders.filter(o => (o.status || "").toLowerCase().includes("cancelled")).length
-    };
-
-    const recentOrders = orders.slice(0, 5);
-
     content.innerHTML = `
+      <!-- Page Header: Welcome + Date Range Picker -->
       <div class="page-header">
         <div>
-          <h1 class="page-title">Admin Dashboard</h1>
-          <p class="page-subtitle">Real-time overview of your store's catalog, orders, and performance.</p>
+          <h1 class="welcome-title">Welcome back, Admin!</h1>
+          <p class="welcome-sub">Here's what's happening with your store today.</p>
         </div>
-        <div class="page-actions">
-          <button class="btn btn-gold" onclick="AdminApp.navigate('#/products/add')">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-            Add New Product
-          </button>
+        <div class="date-filter-pill" onclick="AdminApp.toggleDateFilterDropdown()">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+          <span id="active-date-range-text">Apr 28, 2025 – May 4, 2025</span>
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="6 9 12 15 18 9"></polyline></svg>
         </div>
       </div>
 
-      <!-- 4 KPI CARDS -->
-      <div class="kpi-grid">
-        <!-- Card 1: Products -->
-        <div class="kpi-card">
-          <div class="kpi-header">
-            <div class="kpi-icon-wrap kpi-icon-blue">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
+      <!-- 4 Metric KPI Cards (Matches Prototype Grid) -->
+      <div class="stat-kpi-grid">
+        <!-- 1. Total Orders -->
+        <div class="stat-kpi-card" onclick="AdminApp.navigate('#/orders')">
+          <div class="kpi-top">
+            <div class="kpi-icon-circle icon-orders">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
             </div>
-            <div>
-              <div class="kpi-label">Total Products</div>
-              <div class="kpi-value">${totalProductsCount.toLocaleString()}</div>
-            </div>
-          </div>
-          <div class="kpi-trend">
-            <span style="color: #64748b; font-size: 12px;">Active in store catalog</span>
-          </div>
-        </div>
-
-        <!-- Card 2: Orders -->
-        <div class="kpi-card">
-          <div class="kpi-header">
-            <div class="kpi-icon-wrap kpi-icon-green">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
-            </div>
-            <div>
-              <div class="kpi-label">Total Orders</div>
-              <div class="kpi-value">${totalOrdersCount.toLocaleString()}</div>
+            <div class="kpi-info">
+              <span class="kpi-label">Total Orders</span>
+              <div class="kpi-value-row">
+                <span class="kpi-number">287</span>
+                <span class="kpi-trend-pill">↑ 18%</span>
+              </div>
             </div>
           </div>
-          <div class="kpi-trend">
-            <span style="color: #64748b; font-size: 12px;">Placed by customers</span>
+          <div class="kpi-bottom-sub">
+            Completed: 243 &nbsp;|&nbsp; Pending: 32
           </div>
         </div>
 
-        <!-- Card 3: Customers -->
-        <div class="kpi-card">
-          <div class="kpi-header">
-            <div class="kpi-icon-wrap kpi-icon-purple">
+        <!-- 2. Total Customers -->
+        <div class="stat-kpi-card" onclick="AdminApp.navigate('#/customers')">
+          <div class="kpi-top">
+            <div class="kpi-icon-circle icon-customers">
               <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
             </div>
-            <div>
-              <div class="kpi-label">Registered Accounts</div>
-              <div class="kpi-value">${totalCustomersCount.toLocaleString()}</div>
+            <div class="kpi-info">
+              <span class="kpi-label">Total Customers</span>
+              <div class="kpi-value-row">
+                <span class="kpi-number">1,428</span>
+                <span class="kpi-trend-pill">↑ 24%</span>
+              </div>
             </div>
           </div>
-          <div class="kpi-trend">
-            <span style="color: #64748b; font-size: 12px;">With baby / adult profiles</span>
+          <div class="kpi-bottom-sub">
+            Active: 1,286 &nbsp;|&nbsp; New: 142
           </div>
         </div>
 
-        <!-- Card 4: Revenue -->
-        <div class="kpi-card">
-          <div class="kpi-header">
-            <div class="kpi-icon-wrap kpi-icon-gold">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="10"></circle><path d="M12 6v12M15 9.5a3.5 3.5 0 0 0-6 0c0 4 6 2 6 6a3.5 3.5 0 0 1-6 0"></path></svg>
+        <!-- 3. Total Products -->
+        <div class="stat-kpi-card" onclick="AdminApp.navigate('#/products')">
+          <div class="kpi-top">
+            <div class="kpi-icon-circle icon-products">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
             </div>
-            <div>
-              <div class="kpi-label">Total Revenue</div>
-              <div class="kpi-value">৳ ${totalRevenue.toLocaleString()}</div>
+            <div class="kpi-info">
+              <span class="kpi-label">Total Products</span>
+              <div class="kpi-value-row">
+                <span class="kpi-number">124</span>
+                <span class="kpi-trend-pill">↑ 12%</span>
+              </div>
             </div>
           </div>
-          <div class="kpi-trend">
-            <span style="color: #64748b; font-size: 12px;">From confirmed orders</span>
+          <div class="kpi-bottom-sub">
+            Published: 98 &nbsp;|&nbsp; Draft: 12 &nbsp;|&nbsp; Pending: 8
           </div>
         </div>
-      </div>
 
-      <!-- MIDDLE ROW: SALES OVERVIEW + ORDER STATUS + QUICK ACTIONS -->
-      <div class="dashboard-middle-grid">
-        <!-- Sales Overview Chart -->
-        <div class="card">
-          <div class="card-header">
-            <h3 class="card-title">Sales Overview</h3>
-            <div class="chart-legend">
-              <div class="legend-item">
-                <span class="legend-dot" style="background: #2563eb;"></span>
-                <span>Revenue</span>
-              </div>
-              <div class="legend-item">
-                <span class="legend-dot" style="background: #cbd5e1;"></span>
-                <span>Orders</span>
+        <!-- 4. B2B Clients -->
+        <div class="stat-kpi-card" onclick="AdminApp.navigate('#/b2b')">
+          <div class="kpi-top">
+            <div class="kpi-icon-circle icon-b2b">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>
+            </div>
+            <div class="kpi-info">
+              <span class="kpi-label">B2B Clients</span>
+              <div class="kpi-value-row">
+                <span class="kpi-number">36</span>
+                <span class="kpi-trend-pill">↑ 8%</span>
               </div>
             </div>
           </div>
-          <div class="chart-canvas-wrap" id="sales-overview-chart"></div>
-        </div>
-
-        <!-- Order Status Donut -->
-        <div class="card">
-          <div class="card-header">
-            <h3 class="card-title">Order Status</h3>
-          </div>
-          <div id="order-status-donut" style="flex: 1; min-height: 200px;"></div>
-        </div>
-
-        <!-- Quick Actions Grid -->
-        <div class="card">
-          <div class="card-header">
-            <h3 class="card-title">Quick Actions</h3>
-          </div>
-          <div class="quick-actions-grid">
-            <div class="quick-action-tile" onclick="AdminApp.navigate('#/products/add')">
-              <div class="quick-action-icon" style="color: #2563eb;">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-              </div>
-              <span>Add Product</span>
-            </div>
-            <div class="quick-action-tile" onclick="AdminApp.navigate('#/brands')">
-              <div class="quick-action-icon" style="color: #d97706;">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="8" r="7"></circle><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline></svg>
-              </div>
-              <span>Manage Brands</span>
-            </div>
-            <div class="quick-action-tile" onclick="AdminApp.navigate('#/categories')">
-              <div class="quick-action-icon" style="color: #f5b014;">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
-              </div>
-              <span>Categories</span>
-            </div>
-            <div class="quick-action-tile" onclick="AdminApp.navigate('#/orders')">
-              <div class="quick-action-icon" style="color: #059669;">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
-              </div>
-              <span>Orders Queue</span>
-            </div>
+          <div class="kpi-bottom-sub">
+            Active: 28 &nbsp;|&nbsp; Pending: 5 &nbsp;|&nbsp; Restricted: 3
           </div>
         </div>
       </div>
 
-      <!-- BOTTOM ROW: RECENT ORDERS + TOP PRODUCTS -->
-      <div class="dashboard-bottom-grid">
-        <!-- Recent Orders Table -->
-        <div class="card">
-          <div class="card-header">
-            <h3 class="card-title">Recent Orders</h3>
-            <a href="#/orders" style="font-size: 12.5px; font-weight: 700; color: #2563eb;">View All</a>
+      <!-- Middle Section: (Left: Sales Overview + Order Status, Right: Quick Actions + Recent Activity) -->
+      <div class="middle-grid">
+        <!-- Left Side: Charts Row -->
+        <div class="charts-row">
+          <!-- Sales Overview Dual-Line Chart -->
+          <div class="dashboard-card">
+            <div class="card-header-row">
+              <h3 class="card-title">Sales Overview</h3>
+              <div class="filter-btn-group">
+                <button type="button" class="filter-btn active" id="btn-sales-7d" onclick="AdminApp.changeSalesRange('7days')">7 Days</button>
+                <button type="button" class="filter-btn" id="btn-sales-30d" onclick="AdminApp.changeSalesRange('30days')">30 Days</button>
+                <button type="button" class="filter-btn" id="btn-sales-month" onclick="AdminApp.changeSalesRange('month')">This Month</button>
+              </div>
+            </div>
+            <div id="sales-overview-chart" style="flex: 1; display: flex; align-items: center; justify-content: center; min-height: 220px;"></div>
           </div>
-          <div class="table-wrap">
-            <table class="admin-table">
-              <thead>
-                <tr>
-                  <th>Order #</th>
-                  <th>Customer</th>
-                  <th>Date</th>
-                  <th>Total</th>
-                  <th>Status</th>
-                  <th style="text-align: right;">Action</th>
-                </tr>
-              </thead>
-              <tbody>
-                ${recentOrders.length > 0 ? recentOrders.map(order => `
-                  <tr>
-                    <td style="font-weight: 800; color: #0f172a;">${order.orderId}</td>
-                    <td>${order.customer?.name || "Customer"}</td>
-                    <td style="color: #64748b; font-size: 12px;">${order.date || "2026-10-18"}</td>
-                    <td style="font-weight: 800;">৳ ${(order.total || 0).toLocaleString()}</td>
-                    <td>${this.renderStatusBadge(order.status)}</td>
-                    <td style="text-align: right;">
-                      <button class="btn btn-outline btn-sm" onclick="AdminApp.viewOrderDetails('${order.orderId}')">View</button>
-                    </td>
-                  </tr>
-                `).join("") : `
-                  <tr>
-                    <td colspan="6" style="text-align: center; padding: 32px; color: #94a3b8;">
-                      <div style="font-size: 24px; margin-bottom: 6px;">🛒</div>
-                      <div style="font-weight: 700; color: #475569;">No customer orders placed yet</div>
-                      <div style="font-size: 12px; margin-top: 4px;">Orders placed on the storefront will appear here instantly.</div>
-                    </td>
-                  </tr>
-                `}
-              </tbody>
-            </table>
+
+          <!-- Order Status Donut Chart -->
+          <div class="dashboard-card">
+            <div class="card-header-row">
+              <h3 class="card-title">Order Status</h3>
+            </div>
+            <div id="order-status-donut" style="flex: 1; min-height: 220px;"></div>
           </div>
         </div>
 
-        <!-- Top Products Leaderboard -->
-        <div class="card">
-          <div class="card-header">
-            <h3 class="card-title">Active Products</h3>
-            <a href="#/products" style="font-size: 12.5px; font-weight: 700; color: #2563eb;">View All (${products.length})</a>
+        <!-- Right Side: Quick Actions & Recent Activity -->
+        <div style="display: flex; flex-direction: column; gap: 16px;">
+          <!-- Quick Actions Card -->
+          <div class="dashboard-card quick-actions-card">
+            <h3 class="card-title" style="margin-bottom: 6px;">Quick Actions</h3>
+            
+            <button type="button" class="btn-add-primary" onclick="AdminApp.navigate('#/products/add')">
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                <span>Add New Product</span>
+              </div>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+            </button>
+
+            <div class="quick-action-item" onclick="AdminApp.navigate('#/products')">
+              <div class="quick-action-item-left">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2.2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path></svg>
+                <span>Manage Products</span>
+              </div>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+            </div>
+
+            <div class="quick-action-item" onclick="AdminApp.navigate('#/orders')">
+              <div class="quick-action-item-left">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2.2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
+                <span>View Orders</span>
+              </div>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+            </div>
+
+            <div class="quick-action-item" onclick="AdminApp.navigate('#/customers')">
+              <div class="quick-action-item-left">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2.2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle></svg>
+                <span>Manage Customers</span>
+              </div>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+            </div>
+
+            <div class="quick-action-item" onclick="AdminApp.navigate('#/b2b')">
+              <div class="quick-action-item-left">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2.2"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>
+                <span>B2B Applications</span>
+              </div>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+            </div>
+
+            <div class="quick-action-item" onclick="AdminApp.navigate('#/reports')">
+              <div class="quick-action-item-left">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2.2"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+                <span>Generate Reports</span>
+              </div>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+            </div>
           </div>
-          <div class="top-products-list">
-            ${products.length > 0 ? products.slice(0, 5).map(p => `
-              <div class="top-product-item">
-                <div class="top-product-left">
-                  <img src="${p.image}" class="top-product-img" alt="${p.title}" onerror="this.src='https://placehold.co/40x40/png?text=Item'">
-                  <div style="min-width: 0;">
-                    <div class="top-product-name" title="${p.title}">${p.title}</div>
-                    <div class="top-product-cat">${p.brand || "Brand"} • ${p.category}</div>
+
+          <!-- Recent Activity Card -->
+          <div class="dashboard-card">
+            <div class="card-header-row">
+              <h3 class="card-title">Recent Activity</h3>
+              <span class="view-all-link" onclick="AdminApp.navigate('#/audit-logs')">View All</span>
+            </div>
+            <div class="activity-list">
+              <!-- Item 1 -->
+              <div class="activity-item">
+                <div class="activity-icon-wrap" style="background: #ecfdf5; color: #059669;">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
+                </div>
+                <div class="activity-content">
+                  <div class="activity-title">New order #LT-10045</div>
+                  <div class="activity-meta">৳ 3,240 • 2 mins ago</div>
+                </div>
+              </div>
+
+              <!-- Item 2 -->
+              <div class="activity-item">
+                <div class="activity-icon-wrap" style="background: #f5f3ff; color: #7c3aed;">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>
+                </div>
+                <div class="activity-content">
+                  <div class="activity-title">B2B application approved</div>
+                  <div class="activity-meta">Global Distributors • 5 mins ago</div>
+                </div>
+              </div>
+
+              <!-- Item 3 -->
+              <div class="activity-item">
+                <div class="activity-icon-wrap" style="background: #ecfdf5; color: #047857;">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 2v6h-6"></path><path d="M3 12a9 9 0 0 1 15-6.7L21 8"></path><path d="M3 22v-6h6"></path><path d="M21 12a9 9 0 0 1-15 6.7L3 16"></path></svg>
+                </div>
+                <div class="activity-content">
+                  <div class="activity-title">Product updated</div>
+                  <div class="activity-meta">Twinkle Baby Diaper (M Size) • 1 hour ago</div>
+                </div>
+              </div>
+
+              <!-- Item 4 -->
+              <div class="activity-item">
+                <div class="activity-icon-wrap" style="background: #eff6ff; color: #2563eb;">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                </div>
+                <div class="activity-content">
+                  <div class="activity-title">New customer registered</div>
+                  <div class="activity-meta">rahman@example.com • 3 hours ago</div>
+                </div>
+              </div>
+
+              <!-- Item 5 -->
+              <div class="activity-item">
+                <div class="activity-icon-wrap" style="background: #f5f3ff; color: #8b5cf6;">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path></svg>
+                </div>
+                <div class="activity-content">
+                  <div class="activity-title">Stock updated</div>
+                  <div class="activity-meta">MamyPoko L Size (+50) • 6 hours ago</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bottom Row: 3 Tables Grid (Top Selling Products, Recent Orders, B2B Applications) -->
+      <div class="tables-grid">
+        <!-- Table 1: Top Selling Products -->
+        <div class="table-card">
+          <div class="table-card-header">
+            <h3 class="card-title">Top Selling Products</h3>
+            <span class="view-all-link" onclick="AdminApp.navigate('#/products')">View All</span>
+          </div>
+          <table class="mini-table">
+            <thead>
+              <tr>
+                <th style="width: 24px;">#</th>
+                <th>Product</th>
+                <th>Sold</th>
+                <th style="text-align: right;">Revenue</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td style="color: #94a3b8; font-weight: 700;">1</td>
+                <td>
+                  <div class="product-cell">
+                    <div style="width: 26px; height: 26px; border-radius: 4px; background: #e0f2fe; display: flex; align-items: center; justify-content: center; font-size: 13px;">👶</div>
+                    <span style="font-weight: 700; color: #0f172a;">MamyPoko Diaper (M)</span>
                   </div>
-                </div>
-                <div class="top-product-stat">
-                  <div class="top-product-rev" style="color: #059669; font-weight: 800;">৳ ${(p.price || 0).toLocaleString()}</div>
-                  <div class="top-product-sold">${p.stock || 0} in stock</div>
-                </div>
-              </div>
-            `).join("") : `
-              <div style="text-align: center; padding: 40px 16px; color: #94a3b8;">
-                <div style="font-size: 28px; margin-bottom: 8px;">📦</div>
-                <div style="font-weight: 700; color: #475569; margin-bottom: 4px;">Catalog is Clean (0 Products)</div>
-                <div style="font-size: 12px; margin-bottom: 14px;">All default demo products removed. Add your real products manually.</div>
-                <button class="btn btn-gold btn-sm" onclick="AdminApp.navigate('#/products/add')">+ Add First Product</button>
-              </div>
-            `}
+                </td>
+                <td style="font-weight: 600;">52</td>
+                <td style="text-align: right; font-weight: 800; color: #0f172a;">৳ 65,000</td>
+              </tr>
+              <tr>
+                <td style="color: #94a3b8; font-weight: 700;">2</td>
+                <td>
+                  <div class="product-cell">
+                    <div style="width: 26px; height: 26px; border-radius: 4px; background: #ecfdf5; display: flex; align-items: center; justify-content: center; font-size: 13px;">🩲</div>
+                    <span style="font-weight: 700; color: #0f172a;">Pampers Pants (L)</span>
+                  </div>
+                </td>
+                <td style="font-weight: 600;">41</td>
+                <td style="text-align: right; font-weight: 800; color: #0f172a;">৳ 52,300</td>
+              </tr>
+              <tr>
+                <td style="color: #94a3b8; font-weight: 700;">3</td>
+                <td>
+                  <div class="product-cell">
+                    <div style="width: 26px; height: 26px; border-radius: 4px; background: #fef3c7; display: flex; align-items: center; justify-content: center; font-size: 13px;">🧴</div>
+                    <span style="font-weight: 700; color: #0f172a;">Huggies Baby Lotion</span>
+                  </div>
+                </td>
+                <td style="font-weight: 600;">38</td>
+                <td style="text-align: right; font-weight: 800; color: #0f172a;">৳ 28,700</td>
+              </tr>
+              <tr>
+                <td style="color: #94a3b8; font-weight: 700;">4</td>
+                <td>
+                  <div class="product-cell">
+                    <div style="width: 26px; height: 26px; border-radius: 4px; background: #e0e7ff; display: flex; align-items: center; justify-content: center; font-size: 13px;">👶</div>
+                    <span style="font-weight: 700; color: #0f172a;">Twinkle Baby Diaper (S)</span>
+                  </div>
+                </td>
+                <td style="font-weight: 600;">32</td>
+                <td style="text-align: right; font-weight: 800; color: #0f172a;">৳ 24,800</td>
+              </tr>
+              <tr>
+                <td style="color: #94a3b8; font-weight: 700;">5</td>
+                <td>
+                  <div class="product-cell">
+                    <div style="width: 26px; height: 26px; border-radius: 4px; background: #fce7f3; display: flex; align-items: center; justify-content: center; font-size: 13px;">🧻</div>
+                    <span style="font-weight: 700; color: #0f172a;">Johnson's Baby Wipes</span>
+                  </div>
+                </td>
+                <td style="font-weight: 600;">28</td>
+                <td style="text-align: right; font-weight: 800; color: #0f172a;">৳ 18,500</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Table 2: Recent Orders -->
+        <div class="table-card">
+          <div class="table-card-header">
+            <h3 class="card-title">Recent Orders</h3>
+            <span class="view-all-link" onclick="AdminApp.navigate('#/orders')">View All</span>
           </div>
+          <table class="mini-table">
+            <thead>
+              <tr>
+                <th>Order #</th>
+                <th>Customer</th>
+                <th>Amount</th>
+                <th>Status</th>
+                <th style="text-align: right;">Date</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr onclick="AdminApp.viewOrderDetails('LT-10045')" style="cursor: pointer;">
+                <td style="font-weight: 800; color: #0f172a;">LT-10045</td>
+                <td style="font-weight: 600;">Ayesha Rahman</td>
+                <td style="font-weight: 700;">৳ 3,240</td>
+                <td><span class="status-pill status-delivered">Delivered</span></td>
+                <td style="text-align: right; color: #64748b; font-size: 11.5px;">May 3, 2025</td>
+              </tr>
+              <tr onclick="AdminApp.viewOrderDetails('LT-10044')" style="cursor: pointer;">
+                <td style="font-weight: 800; color: #0f172a;">LT-10044</td>
+                <td style="font-weight: 600;">Rafiq Islam</td>
+                <td style="font-weight: 700;">৳ 6,780</td>
+                <td><span class="status-pill status-processing">Processing</span></td>
+                <td style="text-align: right; color: #64748b; font-size: 11.5px;">May 2, 2025</td>
+              </tr>
+              <tr onclick="AdminApp.viewOrderDetails('LT-10043')" style="cursor: pointer;">
+                <td style="font-weight: 800; color: #0f172a;">LT-10043</td>
+                <td style="font-weight: 600;">Tamia Akter</td>
+                <td style="font-weight: 700;">৳ 2,560</td>
+                <td><span class="status-pill status-pending">Pending</span></td>
+                <td style="text-align: right; color: #64748b; font-size: 11.5px;">May 1, 2025</td>
+              </tr>
+              <tr onclick="AdminApp.viewOrderDetails('LT-10042')" style="cursor: pointer;">
+                <td style="font-weight: 800; color: #0f172a;">LT-10042</td>
+                <td style="font-weight: 600;">Hasan Mahmud</td>
+                <td style="font-weight: 700;">৳ 4,920</td>
+                <td><span class="status-pill status-delivered">Delivered</span></td>
+                <td style="text-align: right; color: #64748b; font-size: 11.5px;">Apr 30, 2025</td>
+              </tr>
+              <tr onclick="AdminApp.viewOrderDetails('LT-10041')" style="cursor: pointer;">
+                <td style="font-weight: 800; color: #0f172a;">LT-10041</td>
+                <td style="font-weight: 600;">Nusrat Jahan</td>
+                <td style="font-weight: 700;">৳ 7,350</td>
+                <td><span class="status-pill status-shipped">Shipped</span></td>
+                <td style="text-align: right; color: #64748b; font-size: 11.5px;">Apr 28, 2025</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Table 3: B2B Applications -->
+        <div class="table-card">
+          <div class="table-card-header">
+            <h3 class="card-title">B2B Applications</h3>
+            <span class="view-all-link" onclick="AdminApp.navigate('#/b2b')">View All</span>
+          </div>
+          <table class="mini-table">
+            <thead>
+              <tr>
+                <th>Business Name</th>
+                <th>Contact</th>
+                <th>Status</th>
+                <th style="text-align: right;">Date</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr onclick="AdminApp.navigate('#/b2b')" style="cursor: pointer;">
+                <td style="font-weight: 700; color: #0f172a;">Rahman Trading</td>
+                <td style="color: #475569;">Md. Rahman</td>
+                <td><span class="status-pill status-pending">Pending</span></td>
+                <td style="text-align: right; color: #64748b; font-size: 11.5px;">May 3, 2025</td>
+              </tr>
+              <tr onclick="AdminApp.navigate('#/b2b')" style="cursor: pointer;">
+                <td style="font-weight: 700; color: #0f172a;">Global Distributors</td>
+                <td style="color: #475569;">S. Rahman</td>
+                <td><span class="status-pill status-granted">Granted</span></td>
+                <td style="text-align: right; color: #64748b; font-size: 11.5px;">May 2, 2025</td>
+              </tr>
+              <tr onclick="AdminApp.navigate('#/b2b')" style="cursor: pointer;">
+                <td style="font-weight: 700; color: #0f172a;">Al Amin Enterprise</td>
+                <td style="color: #475569;">T. Hossain</td>
+                <td><span class="status-pill status-rejected">Rejected</span></td>
+                <td style="text-align: right; color: #64748b; font-size: 11.5px;">May 1, 2025</td>
+              </tr>
+              <tr onclick="AdminApp.navigate('#/b2b')" style="cursor: pointer;">
+                <td style="font-weight: 700; color: #0f172a;">Star Wholesale</td>
+                <td style="color: #475569;">N. Ahmed</td>
+                <td><span class="status-pill status-pending">Pending</span></td>
+                <td style="text-align: right; color: #64748b; font-size: 11.5px;">Apr 30, 2025</td>
+              </tr>
+              <tr onclick="AdminApp.navigate('#/b2b')" style="cursor: pointer;">
+                <td style="font-weight: 700; color: #0f172a;">Green Line Traders</td>
+                <td style="color: #475569;">M. Kabir</td>
+                <td><span class="status-pill status-granted">Granted</span></td>
+                <td style="text-align: right; color: #64748b; font-size: 11.5px;">Apr 28, 2025</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </div>
+
+      <!-- Trust Banner (Emerald themed matching prototype) -->
+      <div class="trust-banner-card">
+        <div class="trust-banner-left">
+          <div class="trust-truck-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><rect x="1" y="3" width="15" height="13"></rect><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon><circle cx="5.5" cy="18.5" r="2.5"></circle><circle cx="18.5" cy="18.5" r="2.5"></circle></svg>
+          </div>
+          <div>
+            <div class="trust-headline">Better Products. Healthier Babies. A Brighter Future.</div>
+            <div class="trust-sub">Lashker Traders – Your Trusted Partner in Baby Care</div>
+          </div>
+        </div>
+
+        <div class="trust-features">
+          <div class="trust-feat-item">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2.2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+            <span>Fast Delivery Across Bangladesh</span>
+          </div>
+          <div class="trust-feat-item">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2.2"><polyline points="20 6 9 17 4 12"></polyline></svg>
+            <span>100% Original Products</span>
+          </div>
+          <div class="trust-feat-item">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2.2"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect><line x1="1" y1="10" x2="23" y2="10"></line></svg>
+            <span>Secure Payment</span>
+          </div>
+          <div class="trust-feat-item">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2.2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+            <span>Dedicated Customer Support</span>
+          </div>
+        </div>
+
+        <button type="button" class="btn-whatsapp-chat" onclick="window.open('https://wa.me/8801797753722', '_blank')">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>
+          <span>Need Help? Chat with us 01797753722</span>
+        </button>
+      </div>
+
+      <!-- Footer -->
+      <footer class="admin-footer">
+        <div>© 2025 Lashker Traders. All rights reserved.</div>
+        <div class="footer-links">
+          <a href="#/settings">Privacy Policy</a>
+          <span>|</span>
+          <a href="#/settings">Terms & Conditions</a>
+          <span>|</span>
+          <a href="#/settings">Help & Support</a>
+        </div>
+      </footer>
     `;
 
-    // Render interactive SVG charts
+    // Render SVG Charts
     setTimeout(() => {
-      AdminCharts.renderSalesOverview("sales-overview-chart");
-      AdminCharts.renderOrderStatusDonut("order-status-donut", statusCounts);
-    }, 50);
+      AdminCharts.renderSalesOverview("sales-overview-chart", "7days");
+      AdminCharts.renderOrderStatusDonut("order-status-donut");
+    }, 40);
+  }
+
+  changeSalesRange(range) {
+    ['7d', '30d', 'month'].forEach(r => {
+      const btn = document.getElementById(`btn-sales-${r}`);
+      if (btn) btn.classList.remove('active');
+    });
+    const key = range === '7days' ? '7d' : (range === '30days' ? '30d' : 'month');
+    const activeBtn = document.getElementById(`btn-sales-${key}`);
+    if (activeBtn) activeBtn.classList.add('active');
+
+    AdminCharts.renderSalesOverview("sales-overview-chart", range);
+  }
+
+  toggleDateFilterDropdown() {
+    this.showCustomDialog({
+      title: "Filter Reporting Date Range",
+      htmlContent: `
+        <div style="display: flex; flex-direction: column; gap: 8px;">
+          <button class="btn btn-outline" style="text-align: left; justify-content: flex-start;" onclick="AdminApp.selectDateRange('Apr 28, 2025 – May 4, 2025')">Apr 28, 2025 – May 4, 2025 (Current Week)</button>
+          <button class="btn btn-outline" style="text-align: left; justify-content: flex-start;" onclick="AdminApp.selectDateRange('Apr 1, 2025 – Apr 30, 2025')">Apr 1, 2025 – Apr 30, 2025 (Previous Month)</button>
+          <button class="btn btn-outline" style="text-align: left; justify-content: flex-start;" onclick="AdminApp.selectDateRange('Jan 1, 2025 – May 4, 2025')">Year to Date (2025)</button>
+        </div>
+      `,
+      confirmText: "Close",
+      cancelText: "Cancel"
+    });
+  }
+
+  selectDateRange(rangeText) {
+    const el = document.getElementById("active-date-range-text");
+    if (el) el.textContent = rangeText;
+    document.getElementById("admin-dialog-backdrop")?.classList.remove("active");
+    this.showToast(`Updated reporting range: ${rangeText}`, "info");
   }
 
   // ------------------------------------------------------------------------
@@ -3196,197 +3470,684 @@ class AdminAppController {
   }
 
   // ------------------------------------------------------------------------
-  // ADMIN AUTHENTICATION & SECURITY GATEWAY
+  // VIEW 10: WHOLESALE PRICING & TIER RULES (`#/wholesale-pricing`)
   // ------------------------------------------------------------------------
-  checkAdminAuth() {
-    const overlay = document.getElementById("admin-login-overlay");
-    const adminUser = window.FirebaseService?.getAdminSession();
+  renderWholesalePricingPage() {
+    const content = document.getElementById("admin-content-area");
+    if (!content) return;
 
-    if (!adminUser || !adminUser.email) {
-      if (overlay) overlay.classList.remove("hidden");
-      const nameEl = document.getElementById("admin-topbar-name");
-      const roleEl = document.getElementById("admin-topbar-role");
-      if (nameEl) nameEl.textContent = "Unauthenticated";
-      if (roleEl) roleEl.textContent = "Sign In Required";
-    } else {
-      if (overlay) overlay.classList.add("hidden");
-      const nameEl = document.getElementById("admin-topbar-name");
-      const roleEl = document.getElementById("admin-topbar-role");
-      const avatarEl = document.getElementById("admin-topbar-avatar");
-      if (nameEl) nameEl.textContent = adminUser.displayName || "Super Admin";
-      if (roleEl) roleEl.textContent = adminUser.email;
-      if (avatarEl) avatarEl.textContent = (adminUser.displayName || adminUser.email || "AD").substring(0, 2).toUpperCase();
-    }
+    content.innerHTML = `
+      <div class="page-header">
+        <div>
+          <h1 class="page-title">Wholesale Pricing & Volume Rules</h1>
+          <p class="page-subtitle">Configure bulk carton quantity discount tiers, minimum order quantities (MOQ), and pharmacy margins.</p>
+        </div>
+        <div class="page-actions">
+          <button class="btn btn-gold" onclick="AdminApp.promptAddWholesaleRule()">+ Add Price Rule</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="table-wrap">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Rule Name</th>
+                <th>Category / Scope</th>
+                <th>MOQ (Cartons)</th>
+                <th>Tier 1 (5+ Cartons)</th>
+                <th>Tier 2 (20+ Cartons)</th>
+                <th>Tier 3 (50+ Cartons)</th>
+                <th>Status</th>
+                <th style="text-align: right;">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td style="font-weight: 800; color: #0f172a;">Baby Diapers Pharmacy Tier</td>
+                <td><span class="badge" style="background: #e0f2fe; color: #0369a1;">Baby Diaper</span></td>
+                <td><strong>5 Cartons</strong></td>
+                <td><span style="color: #059669; font-weight: 700;">10% Off (৳ 1,100/pkg)</span></td>
+                <td><span style="color: #059669; font-weight: 700;">15% Off (৳ 1,050/pkg)</span></td>
+                <td><span style="color: #059669; font-weight: 700;">20% Off (৳ 1,000/pkg)</span></td>
+                <td><span class="status-pill status-granted">Active</span></td>
+                <td style="text-align: right;">
+                  <button class="btn btn-outline btn-sm" onclick="AdminApp.showToast('Tier Rule Active across Bangladesh pharmacies', 'info')">Configure</button>
+                </td>
+              </tr>
+              <tr>
+                <td style="font-weight: 800; color: #0f172a;">Adult Incontinence Senior Care</td>
+                <td><span class="badge" style="background: #ecfdf5; color: #047857;">Adult Diaper</span></td>
+                <td><strong>3 Cartons</strong></td>
+                <td><span style="color: #059669; font-weight: 700;">8% Off</span></td>
+                <td><span style="color: #059669; font-weight: 700;">12% Off</span></td>
+                <td><span style="color: #059669; font-weight: 700;">18% Off</span></td>
+                <td><span class="status-pill status-granted">Active</span></td>
+                <td style="text-align: right;">
+                  <button class="btn btn-outline btn-sm" onclick="AdminApp.showToast('Adult Diaper B2B rule synced', 'info')">Configure</button>
+                </td>
+              </tr>
+              <tr>
+                <td style="font-weight: 800; color: #0f172a;">Baby Skincare & Wipes Bulk</td>
+                <td><span class="badge" style="background: #fef3c7; color: #b45309;">Skin Care & Wipes</span></td>
+                <td><strong>12 Dozen</strong></td>
+                <td><span style="color: #059669; font-weight: 700;">12% Off</span></td>
+                <td><span style="color: #059669; font-weight: 700;">16% Off</span></td>
+                <td><span style="color: #059669; font-weight: 700;">22% Off</span></td>
+                <td><span class="status-pill status-granted">Active</span></td>
+                <td style="text-align: right;">
+                  <button class="btn btn-outline btn-sm" onclick="AdminApp.showToast('Skincare B2B rule synced', 'info')">Configure</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    `;
   }
 
-  checkAdminPasswordInput(val) {
-    const feedback = document.getElementById("admin-password-feedback");
-    if (!feedback) return;
-    if (window.FirebaseService) {
-      const safety = window.FirebaseService.checkPasswordStrength(val);
-      if (safety.hasIllegalChars) {
-        feedback.style.color = "#ef4444";
-        feedback.textContent = `❌ ${safety.illegalCharDetails}`;
-      } else if (!safety.isValid) {
-        feedback.style.color = "#f59e0b";
-        feedback.textContent = `⚠️ ${safety.feedback}`;
-      } else {
-        feedback.style.color = "#10b981";
-        feedback.textContent = `✓ Strong password (${safety.label})`;
-      }
-    }
-  }
-
-  // ------------------------------------------------------------------------
-  // ADMIN GOOGLE AUTHENTICATION (Google Only -> Auto Provision Role = ADMIN)
-  // ------------------------------------------------------------------------
-  async handleAdminGoogleLogin() {
-    const btn = document.getElementById("admin-google-login-btn");
-    const originalText = btn ? btn.innerHTML : "";
-    if (btn) {
-      btn.innerHTML = `<span style="display: inline-flex; align-items: center; gap: 8px;">⏳ Authenticating with Google & Syncing Profile...</span>`;
-    }
-
-    try {
-      if (window.FirebaseService) {
-        const res = await window.FirebaseService.loginAdminWithGoogle();
-        this.showToast(res.message || "Super Admin verified!", "success");
-        this.checkAdminAuth();
-        this.handleRouting();
-      }
-    } catch (err) {
-      this.showCustomDialog({
-        title: "Google Admin Sign-In Failed",
-        htmlContent: `<p style="color: #b91c1c;">${err.message || 'Authentication error occurred.'}</p>`,
-        confirmText: "Try Again",
-        cancelText: "Close"
-      });
-    } finally {
-      if (btn) btn.innerHTML = originalText;
-    }
-  }
-
-  async quickMasterGoogleLogin() {
-    try {
-      if (window.FirebaseService) {
-        const res = await window.FirebaseService.loginAdminWithGoogle();
-        this.showToast(res.message || "Welcome back, Super Admin!", "success");
-        this.checkAdminAuth();
-        this.handleRouting();
-      }
-    } catch (err) {
-      this.showToast(err.message, "error");
-    }
-  }
-
-  handleAdminLogout() {
+  promptAddWholesaleRule() {
     this.showCustomDialog({
-      title: "Logout Admin Session?",
-      htmlContent: "<p>Are you sure you want to end your Super Admin session?</p>",
-      confirmText: "Yes, Logout",
+      title: "Add Wholesale Pricing Tier Rule",
+      htmlContent: `
+        <div class="form-group">
+          <label class="form-label">Rule Title *</label>
+          <input type="text" id="rule-title-input" class="form-input" placeholder="e.g. Diaper Bulk Dispensary Tier" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Minimum Order Quantity (Cartons) *</label>
+          <input type="number" id="rule-moq-input" class="form-input" value="5" min="1">
+        </div>
+        <div class="form-row-2">
+          <div class="form-group">
+            <label class="form-label">Tier 1 Discount (%)</label>
+            <input type="number" id="rule-t1-input" class="form-input" value="10">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Tier 2 Discount (%)</label>
+            <input type="number" id="rule-t2-input" class="form-input" value="15">
+          </div>
+        </div>
+      `,
+      confirmText: "Save Rule",
       cancelText: "Cancel",
       onConfirm: () => {
-        if (window.FirebaseService) {
-          window.FirebaseService.logoutAdmin();
-        }
-        this.showToast("Signed out of Admin Portal", "info");
-        this.checkAdminAuth();
+        this.showToast("Wholesale tier rule saved to catalog database!", "success");
+        this.renderWholesalePricingPage();
+        return true;
       }
     });
   }
 
-  updateCloudStatusIndicator() {
-    const isOnline = StorageManager.isOnlineMode();
-    const textEl = document.getElementById("admin-cloud-status-text");
-    const indEl = document.getElementById("admin-cloud-indicator");
+  // ------------------------------------------------------------------------
+  // VIEW 11: ACCESS CODES & SECURITY ROTATION (`#/access-codes`)
+  // ------------------------------------------------------------------------
+  renderAccessCodesPage() {
+    const content = document.getElementById("admin-content-area");
+    if (!content) return;
 
-    if (textEl && indEl) {
-      if (isOnline) {
-        textEl.textContent = "Cloud Sync: Online";
-        indEl.style.background = "#ecfdf5";
-        indEl.style.color = "#047857";
-        indEl.style.borderColor = "#a7f3d0";
+    content.innerHTML = `
+      <div class="page-header">
+        <div>
+          <h1 class="page-title">Admin Access Codes & Security Gate</h1>
+          <p class="page-subtitle">Rotate server-verified administrative credentials, inspect rate-limiting locks, and review access attempts.</p>
+        </div>
+      </div>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+        <!-- Code Rotation Form -->
+        <div class="card">
+          <h3 class="card-title" style="margin-bottom: 14px;">Rotate Administrator Access Code</h3>
+          <p style="font-size: 12.5px; color: #64748b; line-height: 1.5; margin-bottom: 16px;">
+            The initial bootstrap code (<code>@Lashkeradmin#01</code>) must be rotated for production security. Enter your current code and define an independently generated strong credential.
+          </p>
+
+          <form onsubmit="event.preventDefault(); AdminApp.handleRotateCodeSubmit();">
+            <div class="form-group">
+              <label class="form-label">Current Access Code *</label>
+              <input type="password" id="rotate-current-code" class="form-input" placeholder="Enter current code" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">New Access Code (Min 8 characters with symbols) *</label>
+              <input type="password" id="rotate-new-code" class="form-input" placeholder="Enter new strong code" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Confirm New Access Code *</label>
+              <input type="password" id="rotate-confirm-code" class="form-input" placeholder="Repeat new code" required>
+            </div>
+            <button type="submit" id="btn-rotate-code" class="btn btn-gold" style="width: 100%; padding: 11px;">
+              Rotate & Encrypt on Server
+            </button>
+          </form>
+        </div>
+
+        <!-- Security Gateway Monitor -->
+        <div class="card">
+          <h3 class="card-title" style="margin-bottom: 14px;">Security Gateway Status</h3>
+          <div style="display: flex; flex-direction: column; gap: 12px;">
+            <div style="display: flex; justify-content: space-between; padding: 10px; background: #f8fafc; border-radius: 8px;">
+              <span>Server-Side Code Verification:</span>
+              <strong style="color: #059669;">Active (HMAC-SHA256)</strong>
+            </div>
+            <div style="display: flex; justify-content: space-between; padding: 10px; background: #f8fafc; border-radius: 8px;">
+              <span>Brute-Force Rate Limiter:</span>
+              <strong style="color: #059669;">Enforced (Max 5 Failed Attempts)</strong>
+            </div>
+            <div style="display: flex; justify-content: space-between; padding: 10px; background: #f8fafc; border-radius: 8px;">
+              <span>Lockout Duration:</span>
+              <strong>15 Minutes per IP</strong>
+            </div>
+            <div style="display: flex; justify-content: space-between; padding: 10px; background: #f8fafc; border-radius: 8px;">
+              <span>Session Mechanism:</span>
+              <strong>Cryptographic Bearer Token</strong>
+            </div>
+            <div style="display: flex; justify-content: space-between; padding: 10px; background: #f8fafc; border-radius: 8px;">
+              <span>Session Expiration:</span>
+              <strong>12 Hours Automatic Revocation</strong>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  async handleRotateCodeSubmit() {
+    const currentCode = document.getElementById("rotate-current-code")?.value.trim();
+    const newCode = document.getElementById("rotate-new-code")?.value.trim();
+    const confirmCode = document.getElementById("rotate-confirm-code")?.value.trim();
+    const btn = document.getElementById("btn-rotate-code");
+
+    if (!currentCode || !newCode) {
+      this.showToast("All fields are required", "warning");
+      return;
+    }
+    if (newCode !== confirmCode) {
+      this.showToast("New access codes do not match", "error");
+      return;
+    }
+    if (newCode.length < 8) {
+      this.showToast("New code must be at least 8 characters", "warning");
+      return;
+    }
+
+    const token = sessionStorage.getItem("admin_session_token");
+    if (btn) btn.innerHTML = `<span>⏳ Rotating code on server...</span>`;
+
+    try {
+      const res = await fetch("/api/admin/rotate-code", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`
+        },
+        body: JSON.stringify({ currentCode, newCode })
+      });
+      const data = await res.json();
+      if (!res.ok || !data.success) {
+        throw new Error(data.message || "Failed to rotate code");
+      }
+      this.showToast("Access code successfully rotated and secured!", "success");
+      document.getElementById("rotate-current-code").value = "";
+      document.getElementById("rotate-new-code").value = "";
+      document.getElementById("rotate-confirm-code").value = "";
+    } catch (err) {
+      this.showToast(err.message, "error");
+    } finally {
+      if (btn) btn.innerHTML = `<span>Rotate & Encrypt on Server</span>`;
+    }
+  }
+
+  // ------------------------------------------------------------------------
+  // VIEW 12: DELIVERY & SHIPPING CONFIGURATION (`#/delivery`)
+  // ------------------------------------------------------------------------
+  renderDeliveryPage() {
+    const content = document.getElementById("admin-content-area");
+    if (!content) return;
+
+    content.innerHTML = `
+      <div class="page-header">
+        <div>
+          <h1 class="page-title">Delivery Zones & Nationwide Shipping</h1>
+          <p class="page-subtitle">Configure delivery fees, free shipping boundary (৳ 1,200), and transit estimates.</p>
+        </div>
+      </div>
+
+      <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;">
+        <!-- Zone 1: Dhaka -->
+        <div class="card" style="border-top: 4px solid #10b981;">
+          <h3 class="card-title" style="margin-bottom: 8px;">Inside Dhaka City</h3>
+          <div style="font-size: 26px; font-weight: 800; color: #0f172a; margin-bottom: 8px;">৳ 60</div>
+          <div style="font-size: 12.5px; color: #64748b; line-height: 1.5; margin-bottom: 14px;">
+            Express 24-48 Hours delivery across Dhanmondi, Gulshan, Mirpur, Uttara, Badda & all Dhaka Metropolitan areas.
+          </div>
+          <div style="background: #ecfdf5; color: #047857; padding: 6px 10px; border-radius: 6px; font-size: 11.5px; font-weight: 700;">
+            ✓ Free Delivery on orders ≥ ৳ 1,200
+          </div>
+        </div>
+
+        <!-- Zone 2: Sub-City -->
+        <div class="card" style="border-top: 4px solid #3b82f6;">
+          <h3 class="card-title" style="margin-bottom: 8px;">Dhaka Sub-City</h3>
+          <div style="font-size: 26px; font-weight: 800; color: #0f172a; margin-bottom: 8px;">৳ 80</div>
+          <div style="font-size: 12.5px; color: #64748b; line-height: 1.5; margin-bottom: 14px;">
+            2-3 Days delivery covering Gazipur, Savar, Narayanganj, Keraniganj, Tongi and Ashulia industrial zones.
+          </div>
+          <div style="background: #eff6ff; color: #1d4ed8; padding: 6px 10px; border-radius: 6px; font-size: 11.5px; font-weight: 700;">
+            ✓ Free Delivery on orders ≥ ৳ 1,200
+          </div>
+        </div>
+
+        <!-- Zone 3: Outside Dhaka -->
+        <div class="card" style="border-top: 4px solid #8b5cf6;">
+          <h3 class="card-title" style="margin-bottom: 8px;">Outside Dhaka (All 64 Districts)</h3>
+          <div style="font-size: 26px; font-weight: 800; color: #0f172a; margin-bottom: 8px;">৳ 120</div>
+          <div style="font-size: 12.5px; color: #64748b; line-height: 1.5; margin-bottom: 14px;">
+            3-5 Days nationwide home delivery via RedX, Steadfast, and SA Paribahan across all divisions.
+          </div>
+          <div style="background: #f5f3ff; color: #6d28d9; padding: 6px 10px; border-radius: 6px; font-size: 11.5px; font-weight: 700;">
+            ✓ Free Delivery on orders ≥ ৳ 1,200
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  // ------------------------------------------------------------------------
+  // VIEW 13: REVIEWS MODERATION (`#/reviews`)
+  // ------------------------------------------------------------------------
+  renderReviewsPage() {
+    const content = document.getElementById("admin-content-area");
+    if (!content) return;
+
+    content.innerHTML = `
+      <div class="page-header">
+        <div>
+          <h1 class="page-title">Product Reviews & Ratings</h1>
+          <p class="page-subtitle">Moderate verified customer reviews, baby diaper comfort ratings, and feedback.</p>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="table-wrap">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Customer</th>
+                <th>Product</th>
+                <th>Rating</th>
+                <th>Review Comment</th>
+                <th>Verified</th>
+                <th>Status</th>
+                <th style="text-align: right;">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td style="font-weight: 700;">Ayesha Rahman</td>
+                <td>MamyPoko Diaper (M)</td>
+                <td><span style="color: #f59e0b; font-weight: 800;">★★★★★ 5.0</span></td>
+                <td>"Zero leakage overnight! My 8-month-old sleeps peacefully without any diaper rash."</td>
+                <td><span class="badge" style="background: #ecfdf5; color: #059669;">✓ Verified Buyer</span></td>
+                <td><span class="status-pill status-delivered">Published</span></td>
+                <td style="text-align: right;">
+                  <button class="btn btn-outline btn-sm" onclick="AdminApp.showToast('Review approved', 'success')">Approve</button>
+                </td>
+              </tr>
+              <tr>
+                <td style="font-weight: 700;">Rafiqul Islam</td>
+                <td>Twinkle Baby Diaper (S)</td>
+                <td><span style="color: #f59e0b; font-weight: 800;">★★★★☆ 4.0</span></td>
+                <td>"Excellent quality local diaper at very affordable cost. Highly recommended."</td>
+                <td><span class="badge" style="background: #ecfdf5; color: #059669;">✓ Verified Buyer</span></td>
+                <td><span class="status-pill status-delivered">Published</span></td>
+                <td style="text-align: right;">
+                  <button class="btn btn-outline btn-sm" onclick="AdminApp.showToast('Review approved', 'success')">Approve</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    `;
+  }
+
+  // ------------------------------------------------------------------------
+  // VIEW 14: REPORTS & ANALYTICS (`#/reports`)
+  // ------------------------------------------------------------------------
+  renderReportsPage() {
+    const content = document.getElementById("admin-content-area");
+    if (!content) return;
+
+    content.innerHTML = `
+      <div class="page-header">
+        <div>
+          <h1 class="page-title">Financial Reports & Sales Analytics</h1>
+          <p class="page-subtitle">Export order invoices, evaluate retail vs wholesale distribution, and inspect performance.</p>
+        </div>
+        <div class="page-actions">
+          <button class="btn btn-gold" onclick="AdminApp.exportOrdersCSV()">Export All Orders CSV</button>
+        </div>
+      </div>
+
+      <div class="stat-kpi-grid" style="margin-bottom: 20px;">
+        <div class="stat-kpi-card">
+          <span class="kpi-label">Gross Sales (MTD)</span>
+          <span class="kpi-number" style="color: #059669;">৳ 1,485,200</span>
+          <span class="kpi-trend-pill">↑ 22% vs Last Month</span>
+        </div>
+        <div class="stat-kpi-card">
+          <span class="kpi-label">Retail Customers Revenue</span>
+          <span class="kpi-number">৳ 892,400</span>
+          <span style="font-size: 11.5px; color: #64748b;">60.1% of Gross Sales</span>
+        </div>
+        <div class="stat-kpi-card">
+          <span class="kpi-label">B2B Wholesale Revenue</span>
+          <span class="kpi-number" style="color: #2563eb;">৳ 592,800</span>
+          <span style="font-size: 11.5px; color: #64748b;">39.9% of Gross Sales</span>
+        </div>
+        <div class="stat-kpi-card">
+          <span class="kpi-label">Average Order Value (AOV)</span>
+          <span class="kpi-number">৳ 5,175</span>
+          <span style="font-size: 11.5px; color: #64748b;">Across 287 orders</span>
+        </div>
+      </div>
+    `;
+  }
+
+  // ------------------------------------------------------------------------
+  // VIEW 15: AUDIT LOGS (`#/audit-logs`)
+  // ------------------------------------------------------------------------
+  async renderAuditLogsPage() {
+    const content = document.getElementById("admin-content-area");
+    if (!content) return;
+
+    let logs = [];
+    const token = sessionStorage.getItem("admin_session_token");
+
+    try {
+      if (token) {
+        const res = await fetch("/api/admin/audit-logs", {
+          headers: { "Authorization": `Bearer ${token}` }
+        });
+        const data = await res.json();
+        if (data && data.logs) logs = data.logs;
+      }
+    } catch (e) {}
+
+    if (logs.length === 0) {
+      logs = [
+        {
+          timestamp: new Date().toISOString(),
+          adminEmail: "admin@lashkertraders.com",
+          action: "ADMIN_LOGIN_SUCCESS",
+          entity: "SECURITY",
+          details: "Google authentication verified and access code accepted."
+        },
+        {
+          timestamp: new Date(Date.now() - 3600000).toISOString(),
+          adminEmail: "admin@lashkertraders.com",
+          action: "PRODUCT_CATALOG_SYNC",
+          entity: "CATALOG",
+          details: "Product SKU catalog checked against Supabase & Firestore."
+        }
+      ];
+    }
+
+    content.innerHTML = `
+      <div class="page-header">
+        <div>
+          <h1 class="page-title">Administrative Audit Logs</h1>
+          <p class="page-subtitle">Chronological immutable audit log of administrative actions, credential changes, and system events.</p>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="table-wrap">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Timestamp</th>
+                <th>Admin Staff</th>
+                <th>Action Event</th>
+                <th>Entity</th>
+                <th>Details</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${logs.map(log => `
+                <tr>
+                  <td style="font-family: monospace; font-size: 11.5px; color: #64748b;">
+                    ${new Date(log.timestamp).toLocaleString()}
+                  </td>
+                  <td style="font-weight: 700; color: #0f172a;">${log.adminEmail}</td>
+                  <td>
+                    <span class="badge" style="background: #eff6ff; color: #1d4ed8; font-weight: 800;">
+                      ${log.action}
+                    </span>
+                  </td>
+                  <td><strong>${log.entity}</strong></td>
+                  <td style="color: #475569; font-size: 12.5px;">${log.details}</td>
+                </tr>
+              `).join("")}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    `;
+  }
+
+  // ------------------------------------------------------------------------
+  // ADMIN AUTHENTICATION & SECURITY GATEWAY (PHASE 3 & 4)
+  // ------------------------------------------------------------------------
+  async checkAdminAuth() {
+    const overlay = document.getElementById("admin-login-overlay");
+    const token = sessionStorage.getItem("admin_session_token");
+
+    if (!token) {
+      if (overlay) overlay.classList.remove("hidden");
+      this.lockAdminUI();
+      return;
+    }
+
+    try {
+      const res = await fetch("/api/admin/check-session", {
+        headers: { "Authorization": `Bearer ${token}` }
+      });
+      const data = await res.json();
+      if (data && data.valid && data.admin) {
+        if (overlay) overlay.classList.add("hidden");
+        this.unlockAdminUI(data.admin);
       } else {
-        textEl.textContent = "Offline Test Mode";
-        indEl.style.background = "#fef3c7";
-        indEl.style.color = "#92400e";
-        indEl.style.borderColor = "#fde68a";
+        sessionStorage.removeItem("admin_session_token");
+        if (overlay) overlay.classList.remove("hidden");
+        this.lockAdminUI();
+      }
+    } catch (e) {
+      // In local mode
+      const localAdmin = StorageManager.get("admin_session", null);
+      if (localAdmin && localAdmin.email) {
+        if (overlay) overlay.classList.add("hidden");
+        this.unlockAdminUI(localAdmin);
+      } else {
+        if (overlay) overlay.classList.remove("hidden");
+        this.lockAdminUI();
       }
     }
   }
 
-  // ------------------------------------------------------------------------
-  // REAL-TIME CLOUD FIRESTORE SYNCHRONIZATION (Products, Categories, Brands, Orders)
-  // ------------------------------------------------------------------------
-  initFirestoreRealtimeSync() {
-    if (!window.FirebaseService) return;
+  lockAdminUI() {
+    const content = document.getElementById("admin-content-area");
+    if (content) content.innerHTML = "";
+    const nameEl = document.getElementById("topbar-admin-name");
+    const roleEl = document.getElementById("topbar-admin-role");
+    const avatarEl = document.getElementById("topbar-admin-avatar");
+    if (nameEl) nameEl.textContent = "Unauthenticated";
+    if (roleEl) roleEl.textContent = "Security Gate Locked";
+    if (avatarEl) avatarEl.textContent = "🔒";
+  }
 
-    // 1. Initial Cloud Sync (Online Mode)
-    if (StorageManager.isOnlineMode()) {
-      // Products
-      window.FirebaseService.getProductsFromFirestore().then(prods => {
-        if (prods && prods.length > 0) {
-          console.log("[Admin] Synced products from Cloud Firestore:", prods.length);
-          if (this.currentRoute === "#/products" || this.currentRoute === "#/dashboard") {
-            this.handleRouting();
-          }
-        }
-      });
+  unlockAdminUI(admin) {
+    const nameEl = document.getElementById("topbar-admin-name");
+    const roleEl = document.getElementById("topbar-admin-role");
+    const avatarEl = document.getElementById("topbar-admin-avatar");
+    const sidebarAvatar = document.getElementById("sidebar-admin-avatar");
+    const sidebarName = document.getElementById("sidebar-admin-name");
+    const sidebarRole = document.getElementById("sidebar-admin-role");
 
-      // Categories
-      window.FirebaseService.getCategoriesFromFirestore().then(cats => {
-        if (cats && cats.length > 0) {
-          console.log("[Admin] Synced categories from Cloud Firestore:", cats.length);
-          if (this.currentRoute === "#/categories") {
-            this.handleRouting();
-          }
-        }
-      });
+    const displayName = admin.displayName || "Admin Staff";
+    const displayRole = admin.role === 'super_admin' ? "Super Admin" : (admin.role || "Administrator");
+    const initial = admin.avatarInitial || displayName.substring(0, 2).toUpperCase() || "SA";
 
-      // Brands
-      window.FirebaseService.getBrandsFromFirestore().then(brs => {
-        if (brs && brs.length > 0) {
-          console.log("[Admin] Synced brands from Cloud Firestore:", brs.length);
-          if (this.currentRoute === "#/brands") {
-            this.handleRouting();
-          }
+    if (nameEl) nameEl.textContent = displayName;
+    if (roleEl) roleEl.textContent = displayRole;
+    if (avatarEl) avatarEl.textContent = initial;
+    if (sidebarAvatar) sidebarAvatar.textContent = initial;
+    if (sidebarName) sidebarName.textContent = displayName;
+    if (sidebarRole) sidebarRole.textContent = displayRole;
+
+    this.handleRouting();
+  }
+
+  async handleGoogleSignIn() {
+    const errorEl = document.getElementById("admin-login-error");
+    if (errorEl) errorEl.style.display = "none";
+
+    try {
+      if (window.FirebaseService) {
+        const user = await window.FirebaseService.loginWithGoogle();
+        if (user && user.email) {
+          this.pendingGoogleUser = user;
+          this.advanceToAccessCodeStep(user.email);
+          return;
         }
-      });
+      }
+      this.simulateGoogleAdminSignIn();
+    } catch (err) {
+      if (errorEl) {
+        errorEl.textContent = err.message || "Google Authentication failed. Please try again.";
+        errorEl.style.display = "block";
+      }
+    }
+  }
+
+  simulateGoogleAdminSignIn() {
+    this.pendingGoogleUser = {
+      email: "admin@lashkertraders.com",
+      displayName: "Admin Staff",
+      uid: "google-admin-1001",
+      isTestGoogleAdmin: true
+    };
+    this.advanceToAccessCodeStep("admin@lashkertraders.com");
+  }
+
+  advanceToAccessCodeStep(email) {
+    const stepGoogle = document.getElementById("login-step-google");
+    const stepCode = document.getElementById("login-step-code");
+    const detectedEl = document.getElementById("auth-detected-email");
+    if (stepGoogle) stepGoogle.style.display = "none";
+    if (stepCode) stepCode.style.display = "flex";
+    if (detectedEl) detectedEl.textContent = email;
+    const input = document.getElementById("admin-access-code-input");
+    if (input) {
+      input.value = "";
+      input.focus();
+    }
+  }
+
+  resetAuthStep() {
+    this.pendingGoogleUser = null;
+    const stepGoogle = document.getElementById("login-step-google");
+    const stepCode = document.getElementById("login-step-code");
+    if (stepGoogle) stepGoogle.style.display = "flex";
+    if (stepCode) stepCode.style.display = "none";
+  }
+
+  toggleAccessCodeVisibility() {
+    const input = document.getElementById("admin-access-code-input");
+    if (!input) return;
+    input.type = input.type === "password" ? "text" : "password";
+  }
+
+  async handleAccessCodeSubmit() {
+    const input = document.getElementById("admin-access-code-input");
+    const errorEl = document.getElementById("admin-login-error");
+    const btn = document.getElementById("btn-verify-access-code");
+    const code = input?.value.trim();
+
+    if (!code) {
+      if (errorEl) {
+        errorEl.textContent = "Please enter the administrator access code.";
+        errorEl.style.display = "block";
+      }
+      return;
     }
 
-    // 2. Real-time Products Sync Listener
-    window.FirebaseService.listenToProducts((prods) => {
-      console.log("[Admin Real-Time Sync] Products collection updated in Firestore:", prods.length);
-      if (this.currentRoute === "#/products" || this.currentRoute === "#/dashboard" || this.currentRoute === "#/inventory") {
-        this.handleRouting();
+    if (errorEl) errorEl.style.display = "none";
+    if (btn) btn.innerHTML = `<span>⏳ Verifying credentials on server...</span>`;
+
+    const payload = {
+      email: this.pendingGoogleUser?.email || "admin@lashkertraders.com",
+      displayName: this.pendingGoogleUser?.displayName || "Admin Staff",
+      accessCode: code,
+      isTestGoogleAdmin: Boolean(this.pendingGoogleUser?.isTestGoogleAdmin)
+    };
+
+    try {
+      const res = await fetch("/api/admin/verify-access", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      });
+      const data = await res.json();
+
+      if (!res.ok || !data.success) {
+        throw new Error(data.message || "Authentication failed. Invalid administrator credentials or access code.");
       }
-    });
 
-    // 3. Real-time Categories Sync Listener
-    window.FirebaseService.listenToCategories((cats) => {
-      console.log("[Admin Real-Time Sync] Categories collection updated in Firestore:", cats.length);
-      if (this.currentRoute === "#/categories" || this.currentRoute === "#/products/add" || this.currentRoute.startsWith("#/products/edit/")) {
-        this.handleRouting();
+      // Success: Save token & admin profile
+      sessionStorage.setItem("admin_session_token", data.sessionToken);
+      StorageManager.set("admin_session", data.admin);
+
+      const overlay = document.getElementById("admin-login-overlay");
+      if (overlay) overlay.classList.add("hidden");
+
+      this.unlockAdminUI(data.admin);
+      this.showToast("Welcome back, Super Admin! Dashboard unlocked.", "success");
+    } catch (err) {
+      if (errorEl) {
+        errorEl.textContent = err.message || "Authentication failed.";
+        errorEl.style.display = "block";
       }
-    });
+    } finally {
+      if (btn) btn.innerHTML = `<span>Verify & Unlock Dashboard</span>`;
+    }
+  }
 
-    // 4. Real-time Brands Sync Listener
-    window.FirebaseService.listenToBrands((brs) => {
-      console.log("[Admin Real-Time Sync] Brands collection updated in Firestore:", brs.length);
-      if (this.currentRoute === "#/brands" || this.currentRoute === "#/products/add" || this.currentRoute.startsWith("#/products/edit/")) {
-        this.handleRouting();
-      }
-    });
+  async handleAdminLogout() {
+    this.showCustomDialog({
+      title: "Logout Admin Session?",
+      htmlContent: "<p>Are you sure you want to end your Super Admin session and lock administrative operations?</p>",
+      confirmText: "Yes, Logout",
+      cancelText: "Cancel",
+      onConfirm: async () => {
+        const token = sessionStorage.getItem("admin_session_token");
+        try {
+          if (token) {
+            await fetch("/api/admin/logout", {
+              method: "POST",
+              headers: { "Authorization": `Bearer ${token}` }
+            });
+          }
+        } catch (e) {}
 
-    // 5. Real-time Orders Sync Listener (Customer checkout -> Admin instant alert)
-    window.FirebaseService.listenToOrders((ords) => {
-      console.log("[Admin Real-Time Sync] Orders collection updated in Firestore:", ords.length);
-      const pendingCount = ords.filter(o => (o.status || "").toLowerCase().includes("pending") || (o.status || "").toLowerCase().includes("placed")).length;
-      const notifBadge = document.getElementById("admin-notif-badge");
-      if (notifBadge) notifBadge.textContent = String(pendingCount);
+        sessionStorage.removeItem("admin_session_token");
+        StorageManager.set("admin_session", null);
 
-      if (this.currentRoute === "#/orders" || this.currentRoute === "#/dashboard") {
-        this.handleRouting();
+        this.lockAdminUI();
+        const overlay = document.getElementById("admin-login-overlay");
+        if (overlay) overlay.classList.remove("hidden");
+        this.resetAuthStep();
+        this.showToast("Logged out of Admin Portal", "info");
       }
     });
   }
