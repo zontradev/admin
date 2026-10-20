@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Lashker Traders — Admin Dashboard & Operations Portal</title>
   <link rel="stylesheet" href="css/admin.css">
+  <link rel="stylesheet" href="css/app.css">
   <!-- Google Fonts Inter -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -18,29 +19,18 @@
        ADMIN SIDEBAR (Exact Match to Prototype UI)
        ========================================================================= -->
   <aside class="admin-sidebar" id="admin-sidebar">
-    <!-- Brand Header -->
-    <div class="sidebar-header">
-      <div class="sidebar-logo-icon" title="Lashker Traders">
-        <svg width="26" height="26" viewBox="0 0 100 100">
-          <circle cx="50" cy="52" r="38" fill="#fed7aa"/>
-          <path d="M22 48 C22 22 78 22 78 48" stroke="#059669" stroke-width="6" fill="none" stroke-linecap="round"/>
-          <circle cx="50" cy="18" r="7" fill="#10b981"/>
-          <circle cx="39" cy="48" r="4.5" fill="#0f172a"/>
-          <circle cx="61" cy="48" r="4.5" fill="#0f172a"/>
-          <circle cx="37.5" cy="46" r="1.5" fill="#ffffff"/>
-          <circle cx="59.5" cy="46" r="1.5" fill="#ffffff"/>
-          <circle cx="31" cy="56" r="5" fill="#f43f5e" opacity="0.45"/>
-          <circle cx="69" cy="56" r="5" fill="#f43f5e" opacity="0.45"/>
-          <path d="M42 60 Q50 69 58 60" stroke="#059669" stroke-width="3.5" fill="none" stroke-linecap="round"/>
-        </svg>
+    <!-- Brand Header matching prototype -->
+    <div class="sidebar-header" style="padding: 16px 20px; display: flex; align-items: center; gap: 12px; border-bottom: 1px solid rgba(255,255,255,0.08);">
+      <div style="width: 38px; height: 38px; border-radius: 8px; background: rgba(16, 185, 129, 0.15); display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="#10b981"><path d="M17 8C8 10 5.9 16.17 3.82 21.34L5.71 22l1-2.3A4.49 4.49 0 0 0 8 20C19 20 22 3 22 3c-1 2-8 2.25-13 3.25S2 11.5 2 13.5s1.75 3.75 1.75 3.75C7 8 17 8 17 8z"/></svg>
       </div>
       <div>
-        <div class="sidebar-brand-name">Lashker Traders</div>
-        <div class="sidebar-brand-sub">Diapers • Baby Care • More</div>
+        <div style="font-size: 15px; font-weight: 800; color: #ffffff; letter-spacing: -0.2px; line-height: 1.2;">Lashker Traders</div>
+        <div style="font-size: 11px; font-weight: 600; color: #94a3b8; margin-top: 2px;">& Diaper House</div>
       </div>
     </div>
 
-    <!-- Navigation Items -->
+    <!-- Navigation Items (16 Modules Architecture) -->
     <nav class="sidebar-nav">
       <!-- 1. Dashboard -->
       <div class="sidebar-item active" data-route="#/dashboard" onclick="AdminApp.navigate('#/dashboard')">
@@ -50,8 +40,20 @@
         </div>
       </div>
 
-      <!-- 2. Products -->
-      <div class="sidebar-item" data-route="#/products" onclick="AdminApp.navigate('#/products')">
+      <!-- 2. Orders -->
+      <div class="sidebar-item" data-route="#/orders" onclick="AdminApp.navigate('#/orders')">
+        <div class="sidebar-item-left">
+          <svg class="sidebar-item-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+          <span>Orders</span>
+        </div>
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <span class="sidebar-badge" id="sidebar-order-badge" style="background: #2563eb; color: #ffffff; font-weight: 800;">12</span>
+          <svg class="sidebar-item-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+        </div>
+      </div>
+
+      <!-- 3. Products -->
+      <div class="sidebar-item" id="sidebar-products-parent" data-route="#/products" onclick="AdminApp.navigate('#/products')">
         <div class="sidebar-item-left">
           <svg class="sidebar-item-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
           <span>Products</span>
@@ -59,43 +61,31 @@
         <svg class="sidebar-item-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="9 18 15 12 9 6"></polyline></svg>
       </div>
 
-      <!-- 3. Categories -->
+      <!-- 4. Categories -->
       <div class="sidebar-item" data-route="#/categories" onclick="AdminApp.navigate('#/categories')">
         <div class="sidebar-item-left">
-          <svg class="sidebar-item-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h7"></path></svg>
+          <svg class="sidebar-item-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
           <span>Categories</span>
         </div>
         <svg class="sidebar-item-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="9 18 15 12 9 6"></polyline></svg>
       </div>
 
-      <!-- 4. Brands -->
+      <!-- 5. Brands -->
       <div class="sidebar-item" data-route="#/brands" onclick="AdminApp.navigate('#/brands')">
         <div class="sidebar-item-left">
-          <svg class="sidebar-item-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="10"></circle><path d="M8 14s1.5 2 4 2 4-2 4-2"></path><line x1="9" y1="9" x2="9.01" y2="9"></line><line x1="15" y1="9" x2="15.01" y2="9"></line></svg>
+          <svg class="sidebar-item-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path></svg>
           <span>Brands</span>
         </div>
         <svg class="sidebar-item-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="9 18 15 12 9 6"></polyline></svg>
       </div>
 
-      <!-- 5. Inventory -->
+      <!-- 6. Inventory -->
       <div class="sidebar-item" data-route="#/inventory" onclick="AdminApp.navigate('#/inventory')">
         <div class="sidebar-item-left">
           <svg class="sidebar-item-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><rect x="1" y="3" width="15" height="13"></rect><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon><circle cx="5.5" cy="18.5" r="2.5"></circle><circle cx="18.5" cy="18.5" r="2.5"></circle></svg>
           <span>Inventory</span>
         </div>
         <svg class="sidebar-item-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="9 18 15 12 9 6"></polyline></svg>
-      </div>
-
-      <!-- 6. Orders -->
-      <div class="sidebar-item" data-route="#/orders" onclick="AdminApp.navigate('#/orders')">
-        <div class="sidebar-item-left">
-          <svg class="sidebar-item-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
-          <span>Orders</span>
-        </div>
-        <div style="display: flex; align-items: center; gap: 8px;">
-          <span class="sidebar-badge" id="sidebar-order-badge">12</span>
-          <svg class="sidebar-item-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="9 18 15 12 9 6"></polyline></svg>
-        </div>
       </div>
 
       <!-- 7. Customers -->
@@ -107,42 +97,37 @@
         <svg class="sidebar-item-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="9 18 15 12 9 6"></polyline></svg>
       </div>
 
-      <!-- 8. B2B Applications -->
-      <div class="sidebar-item" data-route="#/b2b" onclick="AdminApp.navigate('#/b2b')">
+      <!-- 8. Reviews -->
+      <div class="sidebar-item" data-route="#/reviews" onclick="AdminApp.navigate('#/reviews')">
         <div class="sidebar-item-left">
-          <svg class="sidebar-item-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>
-          <span>B2B Applications</span>
-        </div>
-        <span class="sidebar-badge" id="sidebar-b2b-badge">5</span>
-      </div>
-
-      <!-- 9. Wholesale Pricing -->
-      <div class="sidebar-item" data-route="#/wholesale-pricing" onclick="AdminApp.navigate('#/wholesale-pricing')">
-        <div class="sidebar-item-left">
-          <svg class="sidebar-item-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
-          <span>Wholesale Pricing</span>
+          <svg class="sidebar-item-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+          <span>Reviews</span>
         </div>
         <svg class="sidebar-item-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="9 18 15 12 9 6"></polyline></svg>
       </div>
 
-      <!-- 10. Storage Bucket (Supabase Storage Management) -->
-      <div class="sidebar-item" data-route="#/storage" onclick="AdminApp.navigate('#/storage')">
+      <!-- 9. B2B / Wholesale -->
+      <div class="sidebar-item" data-route="#/b2b" onclick="AdminApp.navigate('#/b2b')">
         <div class="sidebar-item-left">
-          <svg class="sidebar-item-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
-          <span>Storage Bucket</span>
+          <svg class="sidebar-item-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>
+          <span>B2B / Wholesale</span>
         </div>
-        <span class="badge" style="background: #ecfdf5; color: #047857; font-size: 10px; font-weight: 800;">CDN</span>
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <span class="sidebar-badge" id="sidebar-b2b-badge">5</span>
+          <svg class="sidebar-item-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+        </div>
       </div>
 
-      <!-- 11. Promotions -->
-      <div class="sidebar-item" data-route="#/promotions" onclick="AdminApp.navigate('#/promotions')">
+      <!-- 10. Discounts & Coupons -->
+      <div class="sidebar-item" data-route="#/coupons" onclick="AdminApp.navigate('#/coupons')">
         <div class="sidebar-item-left">
           <svg class="sidebar-item-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line></svg>
-          <span>Promotions</span>
+          <span>Discounts & Coupons</span>
         </div>
+        <svg class="sidebar-item-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="9 18 15 12 9 6"></polyline></svg>
       </div>
 
-      <!-- 12. Delivery & Shipping -->
+      <!-- 11. Delivery & Shipping -->
       <div class="sidebar-item" data-route="#/delivery" onclick="AdminApp.navigate('#/delivery')">
         <div class="sidebar-item-left">
           <svg class="sidebar-item-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><rect x="1" y="3" width="15" height="13"></rect><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon><circle cx="5.5" cy="18.5" r="2.5"></circle><circle cx="18.5" cy="18.5" r="2.5"></circle></svg>
@@ -151,19 +136,29 @@
         <svg class="sidebar-item-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="9 18 15 12 9 6"></polyline></svg>
       </div>
 
-      <!-- 13. Reviews -->
-      <div class="sidebar-item" data-route="#/reviews" onclick="AdminApp.navigate('#/reviews')">
+      <!-- 12. Payments -->
+      <div class="sidebar-item" data-route="#/payments" onclick="AdminApp.navigate('#/payments')">
         <div class="sidebar-item-left">
-          <svg class="sidebar-item-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
-          <span>Reviews</span>
+          <svg class="sidebar-item-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+          <span>Payments</span>
         </div>
+        <svg class="sidebar-item-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="9 18 15 12 9 6"></polyline></svg>
       </div>
 
-      <!-- 14. Reports -->
+      <!-- 13. Reports & Analytics -->
       <div class="sidebar-item" data-route="#/reports" onclick="AdminApp.navigate('#/reports')">
         <div class="sidebar-item-left">
           <svg class="sidebar-item-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
-          <span>Reports</span>
+          <span>Reports & Analytics</span>
+        </div>
+        <svg class="sidebar-item-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+      </div>
+
+      <!-- 14. Staff & Permissions -->
+      <div class="sidebar-item" data-route="#/staff" onclick="AdminApp.navigate('#/staff')">
+        <div class="sidebar-item-left">
+          <svg class="sidebar-item-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="8.5" cy="7" r="4"></circle><polyline points="17 11 19 13 23 9"></polyline></svg>
+          <span>Staff & Permissions</span>
         </div>
       </div>
 
@@ -173,33 +168,52 @@
           <svg class="sidebar-item-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
           <span>Audit Logs</span>
         </div>
+        <svg class="sidebar-item-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="9 18 15 12 9 6"></polyline></svg>
       </div>
 
-      <!-- 16. Settings -->
+      <!-- 16. Store Settings -->
       <div class="sidebar-item" data-route="#/settings" onclick="AdminApp.navigate('#/settings')">
         <div class="sidebar-item-left">
           <svg class="sidebar-item-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
-          <span>Settings</span>
+          <span>Store Settings</span>
         </div>
+      </div>
+
+      <!-- Cloud Storage Management (CDN & Bucket) -->
+      <div class="sidebar-item" data-route="#/storage" onclick="AdminApp.navigate('#/storage')" style="opacity: 0.85;">
+        <div class="sidebar-item-left">
+          <svg class="sidebar-item-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+          <span>Storage Bucket</span>
+        </div>
+        <span class="badge" style="background: rgba(16,185,129,0.2); color: #10b981; font-size: 10px; font-weight: 800; padding: 2px 6px; border-radius: 4px;">CDN</span>
       </div>
     </nav>
 
-    <!-- Sidebar Bottom: Admin Staff Pill & Logout -->
-    <div class="sidebar-footer">
-      <div class="sidebar-user-card" onclick="AdminApp.navigate('#/settings')">
-        <div style="display: flex; align-items: center; gap: 10px;">
-          <div class="sidebar-avatar" id="sidebar-admin-avatar">SA</div>
-          <div>
-            <div class="sidebar-user-name" id="sidebar-admin-name">Admin Staff</div>
-            <div class="sidebar-user-role" id="sidebar-admin-role">Super Admin</div>
-          </div>
+    <!-- Prototype Brand Card (Matching Prototype UI) -->
+    <div class="sidebar-proto-footer" style="padding: 14px 16px; border-top: 1px solid rgba(255,255,255,0.06);">
+      <div class="sidebar-proto-brand-card" style="display: flex; align-items: center; gap: 10px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); padding: 10px 12px; border-radius: 8px;">
+        <div style="width: 28px; height: 28px; border-radius: 6px; background: rgba(37,99,235,0.2); display: flex; align-items: center; justify-content: center; color: #60a5fa;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
         </div>
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#64748b" stroke-width="2.2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+        <div>
+          <div style="font-size: 12px; font-weight: 800; color: #f8fafc;">Lashker Traders</div>
+          <div style="font-size: 10px; color: #94a3b8;">Admin Panel v1.0</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sidebar Bottom: Admin Staff Pill & Logout -->
+    <div class="sidebar-footer" style="padding: 12px 16px; border-top: 1px solid rgba(255,255,255,0.06); display: flex; align-items: center; justify-content: space-between;">
+      <div class="sidebar-user-card" onclick="AdminApp.navigate('#/settings')" style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
+        <div class="sidebar-avatar" id="sidebar-admin-avatar" style="width: 32px; height: 32px; border-radius: 50%; background: #2563eb; color: #ffffff; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 12px;">SA</div>
+        <div>
+          <div class="sidebar-user-name" id="sidebar-admin-name" style="font-size: 12px; font-weight: 700; color: #ffffff;">Admin</div>
+          <div class="sidebar-user-role" id="sidebar-admin-role" style="font-size: 10px; color: #94a3b8;">Super Admin</div>
+        </div>
       </div>
 
-      <button type="button" class="sidebar-logout-btn" onclick="AdminApp.handleAdminLogout()" title="Logout Admin Session">
+      <button type="button" class="sidebar-logout-btn" onclick="AdminApp.handleAdminLogout()" title="Logout Admin Session" style="background: none; border: none; color: #94a3b8; cursor: pointer; padding: 6px;">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
-        <span>Logout</span>
       </button>
     </div>
   </aside>
@@ -215,35 +229,40 @@
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
         </button>
 
-        <!-- Search Bar -->
-        <div class="topbar-search-wrap">
+        <!-- Search Bar with Keyboard Shortcut -->
+        <div class="topbar-search-wrap" style="position: relative; display: flex; align-items: center;">
           <svg class="topbar-search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-          <input type="text" id="admin-search-input" class="topbar-search-input" placeholder="Search products, orders, customers..." oninput="AdminApp.handleGlobalSearch(this.value)">
+          <input type="text" id="admin-search-input" class="topbar-search-input" style="padding-right: 50px;" placeholder="Search products, orders, customers..." oninput="AdminApp.handleGlobalSearch(this.value)">
+          <kbd style="position: absolute; right: 10px; font-family: monospace; font-size: 10px; font-weight: 700; color: #94a3b8; background: #f1f5f9; border: 1px solid #cbd5e1; border-radius: 4px; padding: 2px 5px; pointer-events: none;">⌘ K</kbd>
         </div>
       </div>
 
-      <!-- Right Actions: Notifications, Language, Profile Pill -->
-      <div class="topbar-actions">
-
+      <!-- Right Actions: Notifications, Fullscreen, Dark/Light Mode, Profile Pill -->
+      <div class="topbar-actions" style="display: flex; align-items: center; gap: 14px;">
         <!-- Notification Bell with Red Badge 3 -->
-        <div class="topbar-icon-btn" onclick="AdminApp.navigate('#/orders')" title="Orders requiring attention">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
-          <span class="topbar-badge" id="topbar-notif-badge">3</span>
+        <div class="topbar-icon-btn" onclick="AdminApp.navigate('#/orders')" title="Orders requiring attention" style="position: relative; cursor: pointer; padding: 6px; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #475569;">
+          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
+          <span class="topbar-badge" id="topbar-notif-badge" style="position: absolute; top: 1px; right: 1px; width: 17px; height: 17px; background: #ef4444; color: #ffffff; border-radius: 50%; font-size: 10px; font-weight: 800; display: flex; align-items: center; justify-content: center;">3</span>
         </div>
 
-        <!-- Language Selector -->
-        <div class="lang-picker" title="Change Language">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
-          <span>English</span>
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+        <!-- Fullscreen Expand Button -->
+        <div class="topbar-icon-btn" onclick="AdminApp.toggleFullscreen()" title="Toggle Fullscreen" style="cursor: pointer; padding: 6px; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #475569;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path></svg>
+        </div>
+
+        <!-- Dark/Light Mode Moon Toggle -->
+        <div class="topbar-icon-btn" onclick="AdminApp.toggleDarkMode()" title="Toggle Theme" style="cursor: pointer; padding: 6px; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #475569;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
         </div>
 
         <!-- Admin Profile Pill -->
-        <div class="topbar-user-pill" onclick="AdminApp.navigate('#/settings')">
-          <div class="topbar-avatar" id="topbar-admin-avatar">SA</div>
-          <div class="topbar-user-info">
-            <div class="topbar-user-name" id="topbar-admin-name">Admin Staff</div>
-            <div class="topbar-user-role" id="topbar-admin-role">Super Admin</div>
+        <div class="topbar-user-pill" onclick="AdminApp.navigate('#/settings')" style="display: flex; align-items: center; gap: 10px; cursor: pointer; padding: 4px 8px; border-radius: 8px;">
+          <div class="topbar-avatar" id="topbar-admin-avatar" style="width: 34px; height: 34px; border-radius: 50%; background: #2563eb; color: #ffffff; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 13px; overflow: hidden;">
+            <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=80&h=80&fit=crop&crop=face" alt="Admin" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.style.display='none'; this.parentNode.innerText='SA';">
+          </div>
+          <div class="topbar-user-info" style="display: flex; flex-direction: column;">
+            <div class="topbar-user-name" id="topbar-admin-name" style="font-size: 12.5px; font-weight: 800; color: #0f172a; line-height: 1.2;">Admin</div>
+            <div class="topbar-user-role" id="topbar-admin-role" style="font-size: 10.5px; font-weight: 600; color: #64748b;">Super Admin</div>
           </div>
         </div>
       </div>
@@ -353,6 +372,22 @@
 
   <!-- Toast Container -->
   <div class="toast-container" id="admin-toast-container"></div>
+
+  <!-- Storefront Live Preview Modal -->
+  <div class="proto-preview-backdrop" id="admin-product-preview-backdrop">
+    <div class="proto-preview-modal" id="admin-product-preview-modal">
+      <div class="proto-preview-header">
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <h3 style="font-size: 16px; font-weight: 800; color: #0f172a; margin: 0;">Storefront Customer Preview</h3>
+          <span class="proto-preview-badge-status" id="preview-modal-status-badge">Draft Preview</span>
+        </div>
+        <button type="button" class="hamburger-btn" onclick="AdminApp.closeProductPreviewModal()">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
+      </div>
+      <div class="proto-preview-body" id="admin-product-preview-body"></div>
+    </div>
+  </div>
 
   <!-- Self-Contained Admin Services and Logic -->
   <script src="js/models.js"></script>

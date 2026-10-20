@@ -595,6 +595,61 @@ class StorageManager {
   static saveConfig(cfg) {
     this.set("config", cfg);
   }
+
+  static getDeliveryConfig() {
+    return this.get("delivery_config", {
+      freeDeliveryThreshold: 1200,
+      freeDeliveryEnabled: true,
+      zones: [
+        { id: "inside_dhaka", name: "Inside Dhaka City", fee: 60, estimate: "24-48 Hours", isActive: true },
+        { id: "dhaka_subcity", name: "Dhaka Sub-City (Gazipur, Savar, Narayanganj)", fee: 80, estimate: "2-3 Days", isActive: true },
+        { id: "outside_dhaka", name: "Outside Dhaka (All 64 Districts)", fee: 120, estimate: "3-5 Days", isActive: true }
+      ]
+    });
+  }
+
+  static saveDeliveryConfig(config) {
+    this.set("delivery_config", config);
+  }
+
+  static getAuditLogs() {
+    return this.get("audit_logs", [
+      { id: "log-1", actor: "admin@lashkertraders.com", action: "ORDER_FULFILLMENT_UPDATE", entity: "Order", entityId: "LT-10045", details: { newStatus: "Processing" }, timestamp: new Date(Date.now() - 3600000).toISOString() },
+      { id: "log-2", actor: "admin@lashkertraders.com", action: "PRODUCT_CATALOG_UPDATE", entity: "Product", entityId: "BD-M-001", details: { note: "Updated price and stock" }, timestamp: new Date(Date.now() - 7200000).toISOString() },
+      { id: "log-3", actor: "admin@lashkertraders.com", action: "B2B_APPLICATION_APPROVAL", entity: "B2BApplication", entityId: "app-101", details: { status: "Approved" }, timestamp: new Date(Date.now() - 14400000).toISOString() },
+      { id: "log-4", actor: "admin@lashkertraders.com", action: "DELIVERY_ZONE_UPDATE", entity: "DeliveryZone", entityId: "inside_dhaka", details: { threshold: 1200 }, timestamp: new Date(Date.now() - 86400000).toISOString() }
+    ]);
+  }
+
+  static saveAuditLogs(logs) {
+    this.set("audit_logs", logs);
+  }
+
+  static getStaffMembers() {
+    return this.get("staff_members", [
+      { id: "staff-1", name: "Admin", email: "admin@lashkertraders.com", role: "super_admin", status: "Active", lastLogin: "Just now" },
+      { id: "staff-2", name: "Catalog Specialist", email: "catalog@lashkertraders.com", role: "catalog_manager", status: "Active", lastLogin: "2 hours ago" },
+      { id: "staff-3", name: "Fulfillment Officer", email: "dispatch@lashkertraders.com", role: "order_manager", status: "Active", lastLogin: "Yesterday" }
+    ]);
+  }
+
+  static saveStaffMembers(members) {
+    this.set("staff_members", members);
+  }
+
+  static getPayments() {
+    return this.get("payments", [
+      { id: "pay-1", orderId: "LT-10045", customerName: "Rahim Uddin", amount: 2450, currency: "BDT", method: "Cash on Delivery", status: "Pending", reference: "COD-LT10045", date: "May 4, 2025" },
+      { id: "pay-2", orderId: "LT-10044", customerName: "Ayesha Akter", amount: 1280, currency: "BDT", method: "bKash Online", status: "Paid", reference: "TRX938472918", date: "May 4, 2025" },
+      { id: "pay-3", orderId: "LT-10043", customerName: "Md. Kamrul Hasan", amount: 3620, currency: "BDT", method: "Cash on Delivery", status: "Pending", reference: "COD-LT10043", date: "May 4, 2025" },
+      { id: "pay-4", orderId: "LT-10042", customerName: "Fatema Jahan", amount: 980, currency: "BDT", method: "Nagad Online", status: "Paid", reference: "TRX847291048", date: "May 3, 2025" },
+      { id: "pay-5", orderId: "LT-10041", customerName: "Sabbir Hossain", amount: 4350, currency: "BDT", method: "Cash on Delivery", status: "Paid", reference: "COD-COLLECTED", date: "May 3, 2025" }
+    ]);
+  }
+
+  static savePayments(pays) {
+    this.set("payments", pays);
+  }
 }
 
 // Global data store exports
